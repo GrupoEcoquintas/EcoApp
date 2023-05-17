@@ -1,0 +1,58 @@
+Arguments: 
+  /usr/local/bin/node /usr/local/bin/yarnpkg add react-native@0.71.8
+
+PATH: 
+  /Users/ti/Documents/Luis R/EcoApp/node_modules/.bin:/Users/ti/Documents/Luis R/EcoApp/node_modules/.bin:/Users/ti/Documents/Luis R/node_modules/.bin:/Users/ti/Documents/node_modules/.bin:/Users/ti/node_modules/.bin:/Users/node_modules/.bin:/node_modules/.bin:/usr/local/lib/node_modules/npm/node_modules/@npmcli/run-script/lib/node-gyp-bin:/Library/Frameworks/Python.framework/Versions/3.11/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Library/Frameworks/Python.framework/Versions/3.10/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:~/.dotnet/tools:/Library/Apple/usr/bin:/Applications/Visual Studio Code.app/Contents/Resources/app/bin
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  18.13.0
+
+Platform: 
+  darwin arm64
+
+Trace: 
+  Error: EACCES: permission denied, unlink '/Users/ti/Documents/Luis R/EcoApp/node_modules/@expo/spawn-async/node_modules/which/CHANGELOG.md'
+
+npm manifest: 
+  {
+    "name": "ecoapp",
+    "version": "1.0.0",
+    "main": "node_modules/expo/AppEntry.js",
+    "scripts": {
+      "start": "expo start",
+      "android": "expo start --android",
+      "ios": "expo start --ios",
+      "web": "expo start --web"
+    },
+    "dependencies": {
+      "expo": "~48.0.15",
+      "expo-status-bar": "~1.4.4",
+      "react": "18.2.0",
+      "react-native": "0.71.7"
+    },
+    "devDependencies": {
+      "@babel/core": "^7.20.0",
+      "babel-eslint": "^10.1.0",
+      "eslint-config-standard": "^17.0.0",
+      "eslint-config-standard-jsx": "^11.0.0",
+      "eslint-config-standard-react": "^13.0.0",
+      "eslint-plugin-import": "^2.27.5",
+      "eslint-plugin-node": "^11.1.0",
+      "eslint-plugin-promise": "^6.1.1",
+      "eslint-plugin-react": "^7.32.2"
+    },
+    "private": true,
+    "eslintConfig": {
+      "parser": "@babel/eslint-parser",
+      "extends": ["standard", "standard-jsx", "standard-react"]
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  
