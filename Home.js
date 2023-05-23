@@ -9,59 +9,12 @@ import {
   Alert,
   TextInput,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import CryptoJS from 'crypto-js';
+
 
 
 export default function App() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [hashedPassword, setHashedPassword] = useState("");
-
-  const hashPassword = (password) => {
-    return CryptoJS.MD5(password).toString();
-  };
-
-  const loginPressed = () => {
-    // Construir el objeto de datos a enviar
-    const data = {
-      email: email,
-      password: hashedPassword,
-    };
-
-    // Enviar la solicitud al backend
-    fetch("https://api-rest.ecoquintas.net/api/authenticate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // Manejar la respuesta del backend
-        if (data.token) {
-          // Autenticación exitosa, guardar el token en el dispositivo o en el estado de la aplicación
-          // Ejemplo: guardar el token en AsyncStorage
-          AsyncStorage.setItem("token", data.token)
-            .then(() => {
-              // Navegar a la siguiente pantalla
-              // Ejemplo: utilizar react-navigation
-              console.log("Estamo logeados y en home");
-              //navigation.navigate("Home");
-            })
-            .catch((error) => {
-              console.log("Error al guardar el token:", error);
-            });
-        } else {
-          // Autenticación fallida, mostrar mensaje de error
-          Alert.alert("Error de autenticación", "Credenciales inválidas");
-        }
-      })
-      .catch((error) => {
-        console.log("Error en la solicitud:", error);
-      });
-  };
 
   return (
     <ImageBackground
@@ -87,14 +40,9 @@ export default function App() {
             style={styles.TextInput}
             placeholder="Contraseña"
             secureTextEntry={true}
-            onChangeText={(password) => {
-              setPassword(password);
-              const hashed = hashPassword(password);
-              setHashedPassword(hashed);
-            }}
-          />
+            onChangeText={(password) => setPassword(password)}
+          ></TextInput>
         </View>
-
         <TouchableOpacity>
           <Text style={styles.forgot_button}>Olvidé mi contraseña</Text>
         </TouchableOpacity>
