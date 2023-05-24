@@ -24,7 +24,6 @@ export default function LoginScreen() {
     return CryptoJS.MD5(password).toString();
   };
   const navigation = useNavigation();
-
   const loginPressed = () => {
     // Construir el objeto de datos a enviar
     const data = {
@@ -48,6 +47,11 @@ export default function LoginScreen() {
           // Ejemplo: guardar el token en AsyncStorage
           AsyncStorage.setItem("token", data.token)
             .then(() => {
+              //Mostrar alerta de inicio de sesión exitoso
+              Alert.alert(
+                "Inicio de sesión exitoso",
+                "¡Has iniciado sesión correctamente!"
+              );
               // Navegar a la siguiente pantalla
               // Ejemplo: utilizar react-navigation
               console.log("Estamo logeados y en home");
@@ -72,7 +76,6 @@ export default function LoginScreen() {
         source={require("../../../assets/background.png")}
         style={styles.background}
       >
-        <View>
           <Image
             source={require("../../../assets/logo.png")}
             style={styles.logo}
@@ -106,7 +109,6 @@ export default function LoginScreen() {
           <TouchableOpacity style={styles.loginButton} onPress={loginPressed}>
             <Text style={styles.loginButtonText}>Iniciar sesión</Text>
           </TouchableOpacity>
-        </View>
       </ImageBackground>
     </TouchableWithoutFeedback>
   );
@@ -118,33 +120,18 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   logo: {
-    width: 280,
-    height: 280,
-    marginLeft: "15%",
-    marginTop: "10%",
+    width: 200,
+    height: 200,
+    marginLeft: "25%",
+    marginTop: "15%",
   },
   text: {
     color: "white",
-    marginTop: "-5%",
-    marginLeft: "15%",
+    marginTop: "-3%",
+    marginLeft: "25%",
     marginBottom: 50,
-  },
-  loginButton: {
-    width: "75%",
-    marginLeft: "auto",
-    marginRight: "auto",
-    marginTop: 40,
-    marginBottom: 20,
-    borderRadius: 25,
-  },
-  loginButtonText: {
-    backgroundColor: "#168039",
-    color: "white",
-    borderRadius: 25,
-    textAlign: "center",
-    fontWeight: "bold",
-    fontSize: 27,
-    paddingVertical: 10,
+    fontSize: 17,
+    fontWeight: "bold"
   },
   inputView: {
     marginTop: 20,
@@ -166,5 +153,22 @@ const styles = StyleSheet.create({
     height: 20,
     marginTop: 15,
     marginBottom: 30,
+  },
+  loginButton: {
+    width: "60%",
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginTop: 10,
+    marginBottom: 20,
+    borderRadius: 25,
+  },
+  loginButtonText: {
+    backgroundColor: "#168039",
+    color: "white",
+    borderRadius: 25,
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 25,
+    paddingVertical: 10,
   },
 });
