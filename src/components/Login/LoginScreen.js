@@ -76,39 +76,41 @@ export default function LoginScreen() {
         source={require("../../../assets/background.png")}
         style={styles.background}
       >
-          <Image
-            source={require("../../../assets/logo.png")}
-            style={styles.logo}
-            resizeMode="contain"
+        <Image
+          source={require("../../../assets/logo.png")}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+        <Text style={styles.text}>En donde nace la Felicidad.</Text>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.TextInput}
+            placeholder="Correo electrónico"
+            onChangeText={(email) => setEmail(email)}
           />
-          <Text style={styles.text}>En donde nace la Felicidad.</Text>
-          <View style={styles.inputView}>
-            <TextInput
-              style={styles.TextInput}
-              placeholder="Correo electrónico"
-              onChangeText={(email) => setEmail(email)}
-            />
-          </View>
-          <View style={styles.inputView}>
-            <TextInput
-              style={styles.TextInput}
-              placeholder="Contraseña"
-              secureTextEntry={true}
-              onChangeText={(password) => {
-                setPassword(password);
-                const hashed = hashPassword(password);
-                setHashedPassword(hashed);
-              }}
-            />
-          </View>
+        </View>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.TextInput}
+            placeholder="Contraseña"
+            secureTextEntry={true}
+            onChangeText={(password) => {
+              setPassword(password);
+              const hashed = hashPassword(password);
+              setHashedPassword(hashed);
+            }}
+          />
+        </View>
 
-          <TouchableOpacity>
+        <View style={styles.forgotContainer}>
+          <TouchableOpacity onPress={() => {}}>
             <Text style={styles.forgot_button}>Olvidé mi contraseña</Text>
           </TouchableOpacity>
+        </View>
 
-          <TouchableOpacity style={styles.loginButton} onPress={loginPressed}>
-            <Text style={styles.loginButtonText}>Iniciar sesión</Text>
-          </TouchableOpacity>
+        <TouchableOpacity style={styles.loginButton} onPress={loginPressed}>
+          <Text style={styles.loginButtonText}>Iniciar sesión</Text>
+        </TouchableOpacity>
       </ImageBackground>
     </TouchableWithoutFeedback>
   );
@@ -120,26 +122,25 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   logo: {
-    width: 200,
-    height: 200,
-    marginLeft: "25%",
+    width: 180,
+    height: 180,
+    marginLeft: "28%",
     marginTop: "15%",
   },
   text: {
     color: "white",
     marginTop: "-3%",
-    marginLeft: "25%",
+    marginLeft: "28%",
     marginBottom: 50,
     fontSize: 17,
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   inputView: {
-    marginTop: 20,
     backgroundColor: "white",
     borderRadius: 30,
     width: "70%",
     height: 45,
-    marginLeft: 50,
+    marginLeft: 60,
     marginBottom: 10,
   },
   TextInput: {
@@ -148,27 +149,33 @@ const styles = StyleSheet.create({
     padding: 10,
     textAlign: "center",
   },
+  forgotContainer: {
+    alignSelf: "center",
+    marginTop: 15,
+  },
   forgot_button: {
     alignSelf: "center",
     height: 20,
-    marginTop: 15,
+    marginTop: 5,
     marginBottom: 30,
   },
   loginButton: {
-    width: "60%",
+    width: "50%",
     marginLeft: "auto",
     marginRight: "auto",
-    marginTop: 10,
+    marginTop: 5,
     marginBottom: 20,
-    borderRadius: 25,
+    borderRadius: 40,
+    borderWidth: 2,
+    backgroundColor: "#168039",
+    borderColor: "#168039",
   },
   loginButtonText: {
-    backgroundColor: "#168039",
     color: "white",
     borderRadius: 25,
     textAlign: "center",
     fontWeight: "bold",
-    fontSize: 25,
+    fontSize: 20,
     paddingVertical: 10,
   },
 });

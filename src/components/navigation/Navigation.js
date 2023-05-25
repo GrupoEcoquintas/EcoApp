@@ -29,9 +29,7 @@ const Navigation = () => {
          name="LoginSuccess" 
          component={LoginSuccess}
          options={{
-          title: "",
-          headerTransparent: true,
-          headerTintColor: "white",
+          title: "GrupoEcoquintas",
         }}
         />
         {/* Agrega más pantallas y configuraciones de navegación aquí */}

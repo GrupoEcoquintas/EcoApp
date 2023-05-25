@@ -1,75 +1,123 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  ImageBackground,
-  Image,
-  TextInput,
-} from "react-native";
+import { View, Text, StyleSheet } from "react-native";
+import Footer from "../Footer/Footer"; // Asegúrate de importar correctamente el componente Footer
 
 export default function LoginSuccess() {
+  const [saldoColones, setSaldoColones] = useState(1500000);
+  const [saldoDolares, setSaldoDolares] = useState(2000);
+  const [cuotaColones, setCuotaColones] = useState(50000);
+  const [cuotaDolares, setCuotaDolares] = useState(100);
 
   return (
-    <View>
+    <View style={styles.container}>
+      <View style={styles.card}>
+        <View style={styles.cardHeader}>
+          <Text style={styles.cardTitle}>Mis saldos</Text>
+        </View>
+        <View style={styles.cardBody}>
+          <View style={styles.column}>
+            <Text style={styles.columnTitle}>Saldo en colones</Text>
+            <Text style={[styles.saldoText, { fontSize: 24, fontWeight: 'bold' }]}>₡{saldoColones}</Text>
+          </View>
+          <View style={styles.separator} />
+          <View style={styles.column}>
+            <Text style={styles.columnTitle}>Saldo en dólares</Text>
+            <Text style={[styles.saldoText, { fontSize: 24, fontWeight: 'bold' }]}>${cuotaDolares}</Text>
+          </View>
+        </View>
+      </View>
+
+      <View style={styles.card}>
+        <View style={styles.cardHeader}>
+          <Text style={styles.cardTitle}>Próximas Cuotas</Text>
+        </View>
+        <View style={styles.cardBody}>
+          <View style={styles.column}>
+            <Text style={styles.columnTitle}>Saldo en colones</Text>
+            <Text style={[styles.saldoText, { fontSize: 24, fontWeight: 'bold' }]}>₡{cuotaColones}</Text>
+          </View>
+          <View style={styles.separator} />
+          <View style={styles.column}>
+            <Text style={styles.columnTitle}>Saldo en dólares</Text>
+            <Text style={[styles.saldoText, { fontSize: 24, fontWeight: 'bold' }]}>${cuotaDolares}</Text>
+          </View>
+        </View>
+      </View>
       
+      <View style={styles.card}>
+        <View style={styles.cardHeader}>
+          <Text style={styles.cardTitle}>Movimientos</Text>
+        </View>
+        <View style={styles.cardBody}>
+          <View style={styles.column}>
+            <Text style={styles.columnTitle}>Saldo en colones</Text>
+            <Text style={[styles.saldoText, { fontSize: 24, fontWeight: 'bold' }]}>₡{cuotaColones}</Text>
+          </View>
+          <View style={styles.separator} />
+          <View style={styles.column}>
+            <Text style={styles.columnTitle}>Saldo en dólares</Text>
+            <Text style={[styles.saldoText, { fontSize: 24, fontWeight: 'bold' }]}>${cuotaDolares}</Text>
+          </View>
+        </View>
+      </View>
+      <Footer />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  background: {
-    width: "100%",
-    height: "100%",
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
   },
-  logo: {
-    width: 280,
-    height: 280,
-    marginLeft: "15%",
-    marginTop: "10%",
+  card: {
+    marginTop: 10,
+    backgroundColor: "#eaeaec",
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    padding: 20,
+    margin: 10,
   },
-  text: {
-    color: "white",
-    marginTop: "-5%",
-    marginLeft: "15%",
-    marginBottom: 50,
+  cardHeader: {
+    borderBottomColor: "#ccc",
+    borderBottomWidth: 1,
+    paddingBottom: 10,
+    marginBottom: 10,
+    alignItems: "center",
+    backgroundColor: "orange"
   },
-  loginButton: {
-    width: "75%",
-    marginLeft: "auto",
-    marginRight: "auto",
-    marginTop: 40,
-    marginBottom: 20,
-    borderRadius: 25,
-  },
-  loginButtonText: {
-    backgroundColor: "#168039",
-    color: "white",
-    borderRadius: 25,
-    textAlign: "center",
+  cardTitle: {
+    fontSize: 18,
     fontWeight: "bold",
-    fontSize: 27,
-    paddingVertical: 10,
   },
-  inputView: {
-    marginTop: 20,
-    backgroundColor: "white",
-    borderRadius: 30,
-    width: "70%",
-    height: 45,
-    marginLeft: 50,
+  cardBody: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  column: {
+    flex: 1,
+    alignItems: "center",
+  },
+  columnTitle: {
+    fontSize: 16,
     marginBottom: 10,
   },
-  TextInput: {
-    flex: 1,
-    height: 40,
-    padding: 10,
-    textAlign: "center",
+  separator: {
+    width: 1,
+    height: "100%",
+    backgroundColor: "#ccc",
+    marginHorizontal: 10,
   },
-  forgot_button: {
-    alignSelf: "center",
-    height: 20,
-    marginTop: 15,
-    marginBottom: 30,
+  saldoText: {
+    fontSize: 16,
+    color: "#003366"
   },
 });
