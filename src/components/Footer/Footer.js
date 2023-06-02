@@ -5,17 +5,27 @@ import { Ionicons } from "@expo/vector-icons";
 const Footer = () => {
   return (
     <View style={styles.footerContainer}>
+      <View style={styles.footerLine} />
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.footerButton} onPress={() => console.log("Button 1 pressed")}>
-          <Ionicons name="ios-home" size={28} color="#333" />
+        <TouchableOpacity
+          style={styles.footerButton}
+          onPress={() => console.log("Button 1 pressed")}
+        >
+          <Ionicons name="ios-home" size={28} color="white" />
           <Text style={styles.footerButtonText}>Inicio</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton} onPress={() => console.log("Button 2 pressed")}>
-          <Ionicons name="ios-search" size={28} color="#333" />
+        <TouchableOpacity
+          style={styles.footerButton}
+          onPress={() => console.log("Button 2 pressed")}
+        >
+          <Ionicons name="ios-search" size={28} color="white" />
           <Text style={styles.footerButtonText}>Buscar</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton} onPress={() => console.log("Button 3 pressed")}>
-          <Ionicons name="ios-person" size={28} color="#333" />
+        <TouchableOpacity
+          style={styles.footerButton}
+          onPress={() => console.log("Button 3 pressed")}
+        >
+          <Ionicons name="ios-person" size={28} color="white" />
           <Text style={styles.footerButtonText}>Perfil</Text>
         </TouchableOpacity>
       </View>
@@ -35,7 +45,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingVertical: 15,
-    backgroundColor: '#fefae0'
+    backgroundColor: "#226035",
   },
   footerButton: {
     marginHorizontal: 20,
@@ -43,9 +53,13 @@ const styles = StyleSheet.create({
   },
   footerButtonText: {
     marginTop: 5,
-    color: "#333",
+    color: "white",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  footerLine: {
+    height: 4,
+    backgroundColor: "#E2C80B",
   },
 });
 

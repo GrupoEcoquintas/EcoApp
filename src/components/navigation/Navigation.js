@@ -2,6 +2,8 @@ import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { StyleSheet } from "react-native";
+import { Ionicons } from '@expo/vector-icons';
+
 
 // Importa tus componentes de pantalla
 import LoginScreen from "../Login/LoginScreen";
@@ -29,6 +31,18 @@ const Navigation = () => {
          name="LoginSuccess" 
          component={LoginSuccess}
          options={{
+          headerStyle: {
+            backgroundColor: "#226035",
+          },
+          headerRight: () => (
+            <Ionicons
+              name="leaf"
+              size={24}
+              color="white"
+              style={{ marginRight: 88, transform: [{ rotate: '-90deg' }] }}
+            />
+          ),
+          headerTintColor: "white",
           title: "GrupoEcoquintas",
         }}
         />
