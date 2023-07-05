@@ -19,6 +19,7 @@ export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [hashedPassword, setHashedPassword] = useState("");
+  const [propiedades, setPropiedades] = useState([]);
 
   const hashPassword = (password) => {
     return CryptoJS.MD5(password).toString();
@@ -41,6 +42,7 @@ export default function LoginScreen() {
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log("Esta es la data recibida del fetch authenticate", data);
         // Manejar la respuesta del backend
         if (data.token) {
           // Autenticación exitosa, guardar el token en el dispositivo o en el estado de la aplicación
@@ -55,7 +57,10 @@ export default function LoginScreen() {
               // Navegar a la siguiente pantalla
               // Ejemplo: utilizar react-navigation
               console.log("Estamo logeados y en home");
-              navigation.navigate("LoginSuccess");
+              // Navegar a la siguiente pantalla y pasar la variable dataPropiedades como parámetro
+              navigation.navigate("LoginSuccess", {
+                dataPropiedades: data.dataPropiedades,
+              });
             })
             .catch((error) => {
               console.log("Error al guardar el token:", error);

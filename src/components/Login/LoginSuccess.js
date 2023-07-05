@@ -10,7 +10,8 @@ import Footer from "../Footer/Footer"; // Asegúrate de importar correctamente e
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function LoginSuccess() {
+export default function LoginSuccess({ route }) {
+  const { dataPropiedades } = route.params;
   const navigation = useNavigation();
 
   const [saldoColones, setSaldoColones] = useState(1500000);
@@ -21,30 +22,6 @@ export default function LoginSuccess() {
 
   const handleCardPress = () => {
     navigation.navigate("BalanceReport");
-
-    AsyncStorage.getItem("token")
-      .then((token) => {
-        fetch("http://localhost:3000/api/authenticate", {
-          method: "POST", // Cambiado a POST
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Agregado el token de autorización
-          },
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            //console.log(token);
-            // Aquí puedes actualizar el estado con los datos obtenidos, por ejemplo:
-            setPropiedades(data.propiedades2);
-            console.log(data.propiedades2)
-          })
-          .catch((error) => {
-            console.log("Error en la solicitud:", error);
-          });
-      })
-      .catch((error) => {
-        console.log("Error al obtener el token:", error);
-      });
   };
 
   return (
@@ -56,20 +33,21 @@ export default function LoginSuccess() {
               <Text style={styles.cardTitlePropiedades}>Mis Propiedades</Text>
             </View>
             <View style={styles.cardBodyPropiedades}>
-              <View style={styles.columnPropiedades}>
-                <Text style={styles.columnTitlePropiedades}>
-                  Numero de Propiedad
-                </Text>
-                <Text
-                  style={[
-                    styles.saldoTextPropiedades,
-                    { fontSize: 24, fontWeight: "bold" },
-                  ]}
+              {dataPropiedades.map((propiedad) => (
+                <View
+                  key={propiedad.id_propierty}
+                  style={styles.columnPropiedades}
                 >
-                  {propiedades}
-                </Text>
-              </View>
-              <View style={styles.separatorPropiedades} />
+                  <Text
+                    style={[
+                      styles.saldoTextPropiedades,
+                      { fontSize: 24, fontWeight: "bold" },
+                    ]}
+                  >
+                    {propiedad.nombre_propiedad} - {propiedad.nombre_proyecto}
+                  </Text>
+                </View>
+              ))}
             </View>
           </View>
           <View style={styles.card}>
@@ -257,6 +235,11 @@ const styles = StyleSheet.create({
     elevation: 5,
     padding: 20,
     margin: 10,
+  },
+  cardTitlePropiedades : {
+    fontSize: 30,
+    marginBottom: 10,
+    color: 'green'
   },
   cardHeader: {
     borderBottomColor: "#ccc",
