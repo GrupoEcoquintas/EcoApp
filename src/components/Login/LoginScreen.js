@@ -32,7 +32,7 @@ export default function LoginScreen() {
     };
 
     // Enviar la solicitud al backend
-    fetch("https://api-rest.ecoquintas.net/api/authenticate", {
+    fetch("http://localhost:3000/api/authenticate", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
