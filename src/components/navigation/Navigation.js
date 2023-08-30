@@ -51,7 +51,7 @@ const Navigation = () => {
         <Stack.Screen
           name="BalanceReport"
           component={BalanceReport}
-          options={{
+          options={({ route }) => ({
             headerStyle: {
               backgroundColor: "#226035",
               height: 150, // Ajusta la altura según tus necesidades
@@ -59,8 +59,11 @@ const Navigation = () => {
             headerTintColor: "white",
             title: "Reporte de Estado de Cuenta",
             headerTitleAlign: "center", // Centra el título en el encabezado
-          }}
+            // Pasa dataPropiedades como parámetro al componente BalanceReport
+            passProps: { dataPropiedades: route.params.dataPropiedades },
+          })}
         />
+
         {/* Agrega más pantallas y configuraciones de navegación aquí */}
       </Stack.Navigator>
     </NavigationContainer>

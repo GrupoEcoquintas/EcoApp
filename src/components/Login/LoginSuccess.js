@@ -20,10 +20,10 @@ export default function LoginSuccess({ route }) {
   const [cuotaDolares, setCuotaDolares] = useState(100);
   const [propiedades, setPropiedades] = useState([]);
 
-  const handleCardPress = () => {
-    navigation.navigate("BalanceReport");
+  const handleCardPress = (nombre, proyecto) => {
+    navigation.navigate("BalanceReport", { nombre, proyecto, dataPropiedades });
   };
-
+  
   return (
     <View style={styles.container}>
       <View>
@@ -34,19 +34,20 @@ export default function LoginSuccess({ route }) {
             </View>
             <View style={styles.cardBodyPropiedades}>
               {dataPropiedades.map((propiedad) => (
-                <View
-                  key={propiedad.id_propierty}
-                  style={styles.columnPropiedades}
-                >
-                  <Text
-                    style={[
-                      styles.saldoTextPropiedades,
-                      { fontSize: 24, fontWeight: "bold" },
-                    ]}
-                  >
-                    {propiedad.nombre_propiedad} - {propiedad.nombre_proyecto}
-                  </Text>
-                </View>
+                <TouchableOpacity
+                key={propiedad.id_propierty}
+                style={styles.propertyContainer}
+                onPress={() =>
+                  handleCardPress(
+                    propiedad.nombre_propiedad,
+                    propiedad.nombre_proyecto
+                  )
+                }
+              >
+                <Text style={styles.propertyText}>
+                  {propiedad.nombre_propiedad} - {propiedad.nombre_proyecto}
+                </Text>
+              </TouchableOpacity>
               ))}
             </View>
           </View>
@@ -236,10 +237,10 @@ const styles = StyleSheet.create({
     padding: 20,
     margin: 10,
   },
-  cardTitlePropiedades : {
+  cardTitlePropiedades: {
     fontSize: 30,
     marginBottom: 10,
-    color: 'green'
+    color: "green",
   },
   cardHeader: {
     borderBottomColor: "#ccc",
