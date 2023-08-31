@@ -8,6 +8,8 @@ import { Ionicons } from "@expo/vector-icons";
 import LoginScreen from "../Login/LoginScreen";
 import LoginSuccess from "../Login/LoginSuccess";
 import BalanceReport from "../Balance/BalanceReport";
+import ProjectionReport from '../Projection/ProjectionReport'
+
 // Importa más pantallas si es necesario
 
 // Crea una instancia de Stack Navigator
@@ -58,6 +60,22 @@ const Navigation = () => {
             },
             headerTintColor: "white",
             title: "Reporte de Estado de Cuenta",
+            headerTitleAlign: "center", // Centra el título en el encabezado
+            // Pasa dataPropiedades como parámetro al componente BalanceReport
+            passProps: { dataPropiedades: route.params.dataPropiedades },
+          })}
+        />
+
+        <Stack.Screen
+          name="ProjectionReport"
+          component={ProjectionReport}
+          options={({ route }) => ({
+            headerStyle: {
+              backgroundColor: "#226035",
+              height: 150, // Ajusta la altura según tus necesidades
+            },
+            headerTintColor: "white",
+            title: "Reporte de Proyecciones",
             headerTitleAlign: "center", // Centra el título en el encabezado
             // Pasa dataPropiedades como parámetro al componente BalanceReport
             passProps: { dataPropiedades: route.params.dataPropiedades },

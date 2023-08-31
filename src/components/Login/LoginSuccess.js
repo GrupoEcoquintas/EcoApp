@@ -21,7 +21,7 @@ export default function LoginSuccess({ route }) {
   const [propiedades, setPropiedades] = useState([]);
 
   const handleCardPress = (nombre, proyecto) => {
-    navigation.navigate("BalanceReport", { nombre, proyecto, dataPropiedades });
+    navigation.navigate("ProjectionReport", { nombre, proyecto, dataPropiedades });
   };
   
   return (
@@ -51,6 +51,33 @@ export default function LoginSuccess({ route }) {
               ))}
             </View>
           </View>
+
+          {/* !!!!!!!!!!EStA ES LA CARTA PARA LAS PROYECCIONES */}
+          <View style={styles.cardPropiedades}>
+            <View style={styles.cardHeaderPropiedades}>
+              <Text style={styles.cardTitlePropiedades}>Mis Proyecciones</Text>
+            </View>
+            <View style={styles.cardBodyPropiedades}>
+              {dataPropiedades.map((propiedad) => (
+                <TouchableOpacity
+                key={propiedad.id_propierty}
+                style={styles.propertyContainer}
+                onPress={() =>
+                  handleCardPress(
+                    propiedad.nombre_propiedad,
+                    propiedad.nombre_proyecto
+                  )
+                }
+              >
+                <Text style={styles.propertyText}>
+                  {propiedad.nombre_propiedad} - {propiedad.nombre_proyecto}
+                </Text>
+              </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+
+          
           <View style={styles.card}>
             <View style={styles.cardHeader}>
               <Text style={styles.cardTitle}>Mis saldos</Text>
