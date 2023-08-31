@@ -42,7 +42,7 @@ export default function LoginScreen() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("Esta es la data recibida del fetch authenticate", data);
+        // console.log("Esta es la data recibida del fetch authenticate", data);
         // Manejar la respuesta del backend
         if (data.token) {
           // Autenticación exitosa, guardar el token en el dispositivo o en el estado de la aplicación

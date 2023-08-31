@@ -4,6 +4,7 @@ import Footer from "../Footer/Footer";
 
 const BalanceReport = ({ route }) => {
   const [movimientos, setMovimientos] = useState([]);
+  const [dataLoaded, setDataLoaded] = useState(false);
   const [fecha, setFecha] = useState([]);
   const [concepto, setConcepto] = useState([]);
   const [monto, setMonto] = useState([]);
@@ -16,7 +17,7 @@ const BalanceReport = ({ route }) => {
       propiedad.nombre_propiedad === nombre &&
       propiedad.nombre_proyecto === proyecto
   );
-  console.log(propiedadFiltrada);
+  console.log("Esta es la propiedad Filtrada", propiedadFiltrada);
   const idCotizacion = propiedadFiltrada
     ? propiedadFiltrada.id_cotizacion
     : null;
@@ -24,6 +25,8 @@ const BalanceReport = ({ route }) => {
     "Este es el id filtrado con los parametros recibidos ",
     idCotizacion
   );
+  const userName = propiedadFiltrada.userName;
+  console.log("Este es el userName desde Reporte de cuenta", userName);
 
   useEffect(() => {
     const url = "http://localhost:3000/api/repEstadoCuenta";
@@ -45,7 +48,7 @@ const BalanceReport = ({ route }) => {
       .then((response) => response.json())
       .then((data) => {
         const { results } = data;
-        console.log('Estos son los resultados del fetch',results)
+        console.log("Estos son los resultados del fetch", results);
         const movimientosActualizados = results.map((result) => ({
           fecha: result.fecha,
           concepto: result.nombre_tipo_pago,
@@ -61,6 +64,7 @@ const BalanceReport = ({ route }) => {
             saldo: results.nuevo_balance,
           },
         ]);
+        setDataLoaded(true);
         //setMovimientos(id_pago);
       })
       .catch((error) => {
@@ -69,30 +73,37 @@ const BalanceReport = ({ route }) => {
   }, []);
 
   const cliente = {
-    nombre,
+    userName,
     nombreProyecto: proyecto,
     numeroLote: nombre,
     saldo: 1000,
     movimientos: movimientos.map((movimiento) => ({
-    fecha: formatDate(movimiento.fecha),
-    concepto: movimiento.concepto,
-    monto: movimiento.monto,
-    saldo: movimiento.saldo,
-  })),
+      fecha: formatDate(movimiento.fecha),
+      concepto: movimiento.concepto,
+      monto: movimiento.monto,
+      saldo: movimiento.saldo,
+    })),
   };
   function formatDate(fechaISO8601) {
+    if (!fechaISO8601) {
+      return "N/A"; // Mostrar "N/A" si la fecha no está definida
+    }
     const fecha = new Date(fechaISO8601);
-  
+
+    if (isNaN(fecha.getTime())) {
+      return null; // Mostrar "Fecha Inválida" si la fecha no es válida
+    }
+
     const dia = fecha.getDate();
     const mes = fecha.getMonth() + 1;
     const año = fecha.getFullYear();
-  
+
     return `${dia}/${mes}/${año}`;
   }
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Estado de Cuenta</Text>
-      <Text style={styles.subHeading}>Cliente: {cliente.nombre}</Text>
+      <Text style={styles.subHeading}>Cliente: {cliente.userName}</Text>
       <Text style={styles.subHeading}>
         Nombre del proyecto: {cliente.nombreProyecto}
       </Text>
@@ -101,37 +112,44 @@ const BalanceReport = ({ route }) => {
       </Text>
       <Text style={styles.saldo}>Saldo Actual: {cliente.saldo}</Text>
 
-      <View style={styles.movimientosContainer}>
-        <View style={styles.titulosContainer}>
-          <Text style={[styles.titulo, styles.alignLeft]}>Fecha</Text>
-          <Text style={[styles.titulo, styles.alignLeft]}>Tipo de Pago</Text>
-          <Text style={[styles.titulo, styles.alignRight]}>Monto</Text>
-          <Text style={[styles.titulo, styles.alignRight]}>Saldo Actual</Text>
-        </View>
-
-        {cliente.movimientos.map((movimiento, index) => (
-          <View
-            style={[
-              styles.movimiento,
-              index % 2 === 0 ? null : styles.filaImpar,
-            ]}
-            key={index}
-          >
-            <Text style={[styles.fecha, styles.alignLeft]}>
-              {movimiento.fecha}
-            </Text>
-            <Text style={[styles.concepto, styles.alignLeft]}>
-              {movimiento.concepto}
-            </Text>
-            <Text style={[styles.monto, styles.alignRight]}>
-              {movimiento.monto}
-            </Text>
-            <Text style={[styles.saldoAcual, styles.alignRight]}>
-              {movimiento.saldo}
-            </Text>
+      {dataLoaded && (
+        <View style={styles.movimientosContainer}>
+          <View style={styles.titulosContainer}>
+            <Text style={[styles.titulo, styles.alignLeft]}>Fecha</Text>
+            <Text style={[styles.titulo, styles.alignLeft]}>Tipo de Pago</Text>
+            <Text style={[styles.titulo, styles.alignRight]}>Monto</Text>
+            <Text style={[styles.titulo, styles.alignRight]}>Saldo Actual</Text>
           </View>
-        ))}
-      </View>
+
+          {cliente.movimientos.map((movimiento, index) => (
+            <View
+              style={[
+                styles.movimiento,
+                index % 2 === 0 ? null : styles.filaImpar,
+              ]}
+              key={index}
+            >
+              {/* Solo muestra la fecha si es válida */}
+              {movimiento.fecha !== "Fecha Inválida" && (
+                <Text style={[styles.fecha, styles.alignLeft]}>
+                  {formatDate(movimiento.fecha)}
+                </Text>
+              )}
+
+              <Text style={[styles.concepto, styles.alignLeft]}>
+                {movimiento.concepto}
+              </Text>
+              <Text style={[styles.monto, styles.alignRight]}>
+                {movimiento.monto}
+              </Text>
+              <Text style={[styles.saldoAcual, styles.alignRight]}>
+                {movimiento.saldo}
+              </Text>
+            </View>
+          ))}
+        </View>
+      )}
+
       <Footer />
     </View>
   );
