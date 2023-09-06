@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import Footer from "../Footer/Footer"; // Asegúrate de importar correctamente el componente Footer
 import { useNavigation } from "@react-navigation/native";
@@ -20,10 +21,51 @@ export default function LoginSuccess({ route }) {
   const [cuotaDolares, setCuotaDolares] = useState(100);
   const [propiedades, setPropiedades] = useState([]);
 
-  const handleCardPress = (nombre, proyecto) => {
-    navigation.navigate("ProjectionReport", { nombre, proyecto, dataPropiedades });
+  const handleCardPressBalance = (nombre, proyecto) => {
+    navigation.navigate("BalanceReport", { nombre, proyecto, dataPropiedades });
   };
-  
+  const handleCardPressProjection = (id_quote, quote_type, proyeccion_real) => {
+    fetch("/generaProyeccion", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        p_id_quote: id_quote,
+        p_quote_type: quote_type,
+        p_proyeccion_real: proyeccion_real,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.blob(); // Convierte la respuesta a un blob (archivo)
+      })
+      .then((blob) => {
+        // Crea un objeto URL para el blob
+        const url = URL.createObjectURL(blob);
+
+        // Crea un enlace invisible en el DOM para descargar el PDF
+        const a = document.createElement("a");
+        a.style.display = "none";
+        a.href = url;
+        a.download = "Proyeccion.pdf"; // Nombre del archivo PDF
+        document.body.appendChild(a);
+
+        // Dispara un clic en el enlace para iniciar la descarga
+        a.click();
+
+        // Limpia el objeto URL y remueve el enlace del DOM
+        URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      })
+      .catch((error) => {
+        console.error("Error al generar el PDF:", error);
+        // Puedes mostrar un mensaje de error al usuario si es necesario
+      });
+  };
+
   return (
     <View style={styles.container}>
       <View>
@@ -35,19 +77,19 @@ export default function LoginSuccess({ route }) {
             <View style={styles.cardBodyPropiedades}>
               {dataPropiedades.map((propiedad) => (
                 <TouchableOpacity
-                key={propiedad.id_propierty}
-                style={styles.propertyContainer}
-                onPress={() =>
-                  handleCardPress(
-                    propiedad.nombre_propiedad,
-                    propiedad.nombre_proyecto
-                  )
-                }
-              >
-                <Text style={styles.propertyText}>
-                  {propiedad.nombre_propiedad} - {propiedad.nombre_proyecto}
-                </Text>
-              </TouchableOpacity>
+                  key={propiedad.id_propierty}
+                  style={styles.propertyContainer}
+                  onPress={() =>
+                    handleCardPressBalance(
+                      propiedad.nombre_propiedad,
+                      propiedad.nombre_proyecto
+                    )
+                  }
+                >
+                  <Text style={styles.propertyText}>
+                    {propiedad.nombre_propiedad} - {propiedad.nombre_proyecto}
+                  </Text>
+                </TouchableOpacity>
               ))}
             </View>
           </View>
@@ -57,27 +99,35 @@ export default function LoginSuccess({ route }) {
             <View style={styles.cardHeaderPropiedades}>
               <Text style={styles.cardTitlePropiedades}>Mis Proyecciones</Text>
             </View>
-            <View style={styles.cardBodyPropiedades}>
+            <View style={styles.cardBodyProjections}>
               {dataPropiedades.map((propiedad) => (
                 <TouchableOpacity
-                key={propiedad.id_propierty}
-                style={styles.propertyContainer}
-                onPress={() =>
-                  handleCardPress(
-                    propiedad.nombre_propiedad,
-                    propiedad.nombre_proyecto
-                  )
-                }
-              >
-                <Text style={styles.propertyText}>
-                  {propiedad.nombre_propiedad} - {propiedad.nombre_proyecto}
-                </Text>
-              </TouchableOpacity>
+                  key={propiedad.id_propierty}
+                  style={styles.propertyContainer}
+                  onPress={() =>
+                    handleCardPressProjection(
+                      propiedad.nombre_propiedad,
+                      propiedad.nombre_proyecto,
+                      propiedad.id_quote, // Agrega los valores necesarios aquí
+                      propiedad.quote_type, // Agrega los valores necesarios aquí
+                      propiedad.proyeccion_real // Agrega los valores necesarios aquí
+                    )
+                  }
+                >
+                  <View style={styles.iconTextContainer}>
+                    <Text style={styles.propertyText}>
+                      {propiedad.nombre_propiedad} - {propiedad.nombre_proyecto}
+                    </Text>
+                    <Image
+                      source={require("../../../assets/descargarIcon.png")}
+                      style={styles.icono}
+                    />
+                  </View>
+                </TouchableOpacity>
               ))}
             </View>
           </View>
 
-          
           <View style={styles.card}>
             <View style={styles.cardHeader}>
               <Text style={styles.cardTitle}>Mis saldos</Text>
@@ -140,7 +190,7 @@ export default function LoginSuccess({ route }) {
             </View>
           </View>
 
-          <TouchableOpacity onPress={handleCardPress}>
+          <TouchableOpacity>
             <View style={styles.card}>
               <View style={styles.cardHeader}>
                 <Text style={styles.cardTitle}>Movimientos</Text>
@@ -301,6 +351,24 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   saldoText: {
+    fontSize: 16,
+    color: "#003366",
+  },
+  cardBodyPropiedades: {
+    flexDirection: "column", // Cambiar a "column" para apilar verticalmente
+  },
+  iconTextContainer: {
+    flexDirection: "row", // Mostrar el icono y el texto en una fila
+    alignItems: "center", // Alinear verticalmente al centro
+  },
+  icono: {
+    width: 24,
+    height: 24,
+    marginRight: 10,
+    marginLeft: 15,
+    resizeMode: "contain",
+  },
+  propertyText: {
     fontSize: 16,
     color: "#003366",
   },

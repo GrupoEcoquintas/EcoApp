@@ -110,7 +110,7 @@ const BalanceReport = ({ route }) => {
       <Text style={styles.subHeading}>
         Número de Lote: {cliente.numeroLote}
       </Text>
-      <Text style={styles.saldo}>Saldo Actual: {cliente.saldo}</Text>
+      <Text style={styles.subHeading}>Saldo Actual: {cliente.saldo}</Text>
 
       {dataLoaded && (
         <View style={styles.movimientosContainer}>

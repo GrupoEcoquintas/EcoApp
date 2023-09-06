@@ -110,17 +110,13 @@ const ProjectionReport = ({ route }) => {
       <Text style={styles.subHeading}>
         Número de Lote: {cliente.numeroLote}
       </Text>
-      <Text style={styles.saldo}>Plazo: {cliente.plazo}</Text>
-      <Text style={styles.saldo}>Cuota: {cliente.plazo}</Text>
-      <Text style={styles.saldo}>Moneda: {cliente.plazo}</Text>
 
       {dataLoaded && (
         <View style={styles.movimientosContainer}>
           <View style={styles.titulosContainer}>
-            <Text style={[styles.titulo, styles.alignLeft]}>Fecha</Text>
-            <Text style={[styles.titulo, styles.alignLeft]}>Tipo de Pago</Text>
-            <Text style={[styles.titulo, styles.alignRight]}>Monto</Text>
-            <Text style={[styles.titulo, styles.alignRight]}>Saldo Actual</Text>
+            <Text style={[styles.titulo, styles.alignLeft]}>Tipo de Cotización</Text>
+            <Text style={[styles.titulo, styles.alignLeft]}>Cliente</Text>
+            <Text style={[styles.titulo, styles.alignLeft]}>Fecha Creación</Text>
           </View>
 
           {cliente.movimientos.map((movimiento, index) => (
@@ -143,9 +139,6 @@ const ProjectionReport = ({ route }) => {
               </Text>
               <Text style={[styles.monto, styles.alignRight]}>
                 {movimiento.monto}
-              </Text>
-              <Text style={[styles.saldoAcual, styles.alignRight]}>
-                {movimiento.saldo}
               </Text>
             </View>
           ))}
