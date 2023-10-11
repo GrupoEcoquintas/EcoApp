@@ -13,6 +13,8 @@ import { useNavigation } from "@react-navigation/native";
 import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
 import * as Sharing from "expo-sharing";
+import LinearGradient from 'react-native-linear-gradient';
+
 
 export default function LoginSuccess({ route }) {
   const { dataPropiedades } = route.params;
@@ -97,7 +99,10 @@ export default function LoginSuccess({ route }) {
   };
 
   return (
-    <View style={styles.container}>
+    <LinearGradient
+      colors={["#4CAF50", "#2196F3"]} // Cambia estos colores según tus preferencias
+      style={styles.container}
+    >
       <View>
         <ScrollView style={styles.scrollView}>
           <View style={styles.cardPropiedades}>
@@ -220,7 +225,7 @@ export default function LoginSuccess({ route }) {
         </ScrollView>
       </View>
       <Footer />
-    </View>
+      </LinearGradient>
   );
 }
 
