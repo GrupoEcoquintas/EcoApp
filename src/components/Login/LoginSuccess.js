@@ -6,10 +6,13 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  Alert,
 } from "react-native";
 import Footer from "../Footer/Footer"; // Asegúrate de importar correctamente el componente Footer
 import { useNavigation } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as FileSystem from "expo-file-system";
+import * as MediaLibrary from "expo-media-library";
+import * as Sharing from "expo-sharing";
 
 export default function LoginSuccess({ route }) {
   const { dataPropiedades } = route.params;
@@ -21,49 +24,76 @@ export default function LoginSuccess({ route }) {
   const [cuotaDolares, setCuotaDolares] = useState(100);
   const [propiedades, setPropiedades] = useState([]);
 
+  const handleCardPressProjection = async (
+    idQuote = 14338,
+    quoteType = 0,
+    proyeccionReal = 1
+  ) => {
+    try {
+      // Realiza la solicitud a tu API para generar la proyección
+      const response = await fetch(
+        "https://api-rest.ecoquintas.net/api/generaProyeccion",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            p_id_quote: idQuote,
+            p_quote_type: quoteType,
+            p_proyeccion_real: proyeccionReal,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("No se pudo generar la proyección.");
+      }
+
+      // Obtén la respuesta de la API
+      const responseData = await response.json();
+
+      // Verifica que se haya generado correctamente
+      if (
+        responseData.message !==
+        "Proyección generada y URL pre-firmado generado ✔️"
+      ) {
+        throw new Error("No se pudo generar la proyección correctamente.");
+      }
+
+      // Obtiene la URL del archivo generado en S3
+      const fileUrl = responseData.s3Location;
+
+      // Define el nombre del archivo de descarga
+      const fileName = `Proyeccion_${idQuote}.pdf`;
+
+      // Define la ubicación local donde se guardará el archivo
+      const localUri = FileSystem.documentDirectory + fileName;
+
+      // Descarga el archivo desde el enlace de S3
+      const downloadResult = await FileSystem.downloadAsync(fileUrl, localUri);
+
+      if (downloadResult.status === 200) {
+        // console.log('Archivo descargado en:', downloadResult.uri);
+
+        // Abre el archivo PDF en un visor
+        Sharing.shareAsync(downloadResult.uri, {
+          mimeType: "application/pdf",
+          dialogTitle: "Abrir PDF",
+        });
+      } else {
+        //console.error('Error al descargar el archivo.');
+        //console.error('Error al descargar el archivo. Estado:', downloadResult.status);
+        Alert.alert("Error", "No se pudo descargar el archivo.");
+      }
+    } catch (error) {
+      //console.error('Error:', error);
+      Alert.alert("Error", "Ocurrió un error inesperado.");
+    }
+  };
+
   const handleCardPressBalance = (nombre, proyecto) => {
     navigation.navigate("BalanceReport", { nombre, proyecto, dataPropiedades });
-  };
-  const handleCardPressProjection = (id_quote, quote_type, proyeccion_real) => {
-    fetch("/generaProyeccion", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        p_id_quote: id_quote,
-        p_quote_type: quote_type,
-        p_proyeccion_real: proyeccion_real,
-      }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.blob(); // Convierte la respuesta a un blob (archivo)
-      })
-      .then((blob) => {
-        // Crea un objeto URL para el blob
-        const url = URL.createObjectURL(blob);
-
-        // Crea un enlace invisible en el DOM para descargar el PDF
-        const a = document.createElement("a");
-        a.style.display = "none";
-        a.href = url;
-        a.download = "Proyeccion.pdf"; // Nombre del archivo PDF
-        document.body.appendChild(a);
-
-        // Dispara un clic en el enlace para iniciar la descarga
-        a.click();
-
-        // Limpia el objeto URL y remueve el enlace del DOM
-        URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-      })
-      .catch((error) => {
-        console.error("Error al generar el PDF:", error);
-        // Puedes mostrar un mensaje de error al usuario si es necesario
-      });
   };
 
   return (
@@ -72,7 +102,7 @@ export default function LoginSuccess({ route }) {
         <ScrollView style={styles.scrollView}>
           <View style={styles.cardPropiedades}>
             <View style={styles.cardHeaderPropiedades}>
-              <Text style={styles.cardTitlePropiedades}>Mis Propiedades</Text>
+              <Text style={styles.cardTitlePropiedades}>Mis Movimientos</Text>
             </View>
             <View style={styles.cardBodyPropiedades}>
               {dataPropiedades.map((propiedad) => (
@@ -99,18 +129,16 @@ export default function LoginSuccess({ route }) {
             <View style={styles.cardHeaderPropiedades}>
               <Text style={styles.cardTitlePropiedades}>Mis Proyecciones</Text>
             </View>
-            <View style={styles.cardBodyProjections}>
+            <View style={styles.cardBodyPropiedades}>
               {dataPropiedades.map((propiedad) => (
                 <TouchableOpacity
                   key={propiedad.id_propierty}
                   style={styles.propertyContainer}
                   onPress={() =>
                     handleCardPressProjection(
-                      propiedad.nombre_propiedad,
-                      propiedad.nombre_proyecto,
-                      propiedad.id_quote, // Agrega los valores necesarios aquí
-                      propiedad.quote_type, // Agrega los valores necesarios aquí
-                      propiedad.proyeccion_real // Agrega los valores necesarios aquí
+                      propiedad.id_quote, // Agrega el id_quote aquí
+                      propiedad.quote_type, // Agrega el quote_type aquí
+                      propiedad.proyeccion_real // Agrega la proyeccion_real aquí
                     )
                   }
                 >
@@ -119,7 +147,7 @@ export default function LoginSuccess({ route }) {
                       {propiedad.nombre_propiedad} - {propiedad.nombre_proyecto}
                     </Text>
                     <Image
-                      source={require("../../../assets/descargarIcon.png")}
+                      source={require("../../../assets/pdf.png")}
                       style={styles.icono}
                     />
                   </View>
@@ -128,9 +156,9 @@ export default function LoginSuccess({ route }) {
             </View>
           </View>
 
-          <View style={styles.card}>
-            <View style={styles.cardHeader}>
-              <Text style={styles.cardTitle}>Mis saldos</Text>
+          <View style={styles.cardPropiedades}>
+            <View style={styles.cardHeaderPropiedades}>
+              <Text style={styles.cardTitlePropiedades}>Mis saldos</Text>
             </View>
             <View style={styles.cardBody}>
               <View style={styles.column}>
@@ -159,9 +187,9 @@ export default function LoginSuccess({ route }) {
             </View>
           </View>
 
-          <View style={styles.card}>
-            <View style={styles.cardHeader}>
-              <Text style={styles.cardTitle}>Próximas Cuotas</Text>
+          <View style={styles.cardPropiedades}>
+            <View style={styles.cardHeaderPropiedades}>
+              <Text style={styles.cardTitlePropiedades}>Próximas Cuotas</Text>
             </View>
             <View style={styles.cardBody}>
               <View style={styles.column}>
@@ -189,89 +217,6 @@ export default function LoginSuccess({ route }) {
               </View>
             </View>
           </View>
-
-          <TouchableOpacity>
-            <View style={styles.card}>
-              <View style={styles.cardHeader}>
-                <Text style={styles.cardTitle}>Movimientos</Text>
-              </View>
-              <View style={styles.cardBody}>
-                <View style={styles.column}>
-                  <Text style={styles.columnTitle}>Pago App</Text>
-                  <Text
-                    style={[
-                      styles.saldoText,
-                      { fontSize: 24, fontWeight: "bold" },
-                    ]}
-                  >
-                    ₡{cuotaColones}
-                  </Text>
-                </View>
-                <View style={styles.separator} />
-                <View style={styles.column}>
-                  <Text style={styles.columnTitle}>Saldo en dólares</Text>
-                  <Text
-                    style={[
-                      styles.saldoText,
-                      { fontSize: 24, fontWeight: "bold" },
-                    ]}
-                  >
-                    ${cuotaDolares}
-                  </Text>
-                </View>
-              </View>
-              <View style={styles.cardBody}>
-                <View style={styles.column}>
-                  <Text style={styles.columnTitle}>Pago App</Text>
-                  <Text
-                    style={[
-                      styles.saldoText,
-                      { fontSize: 24, fontWeight: "bold" },
-                    ]}
-                  >
-                    ₡{cuotaColones}
-                  </Text>
-                </View>
-                <View style={styles.separator} />
-                <View style={styles.column}>
-                  <Text style={styles.columnTitle}>Saldo en dólares</Text>
-                  <Text
-                    style={[
-                      styles.saldoText,
-                      { fontSize: 24, fontWeight: "bold" },
-                    ]}
-                  >
-                    ${cuotaDolares}
-                  </Text>
-                </View>
-              </View>
-              <View style={styles.cardBody}>
-                <View style={styles.column}>
-                  <Text style={styles.columnTitle}>Pago App</Text>
-                  <Text
-                    style={[
-                      styles.saldoText,
-                      { fontSize: 24, fontWeight: "bold" },
-                    ]}
-                  >
-                    ₡{cuotaColones}
-                  </Text>
-                </View>
-                <View style={styles.separator} />
-                <View style={styles.column}>
-                  <Text style={styles.columnTitle}>Saldo en dólares</Text>
-                  <Text
-                    style={[
-                      styles.saldoText,
-                      { fontSize: 24, fontWeight: "bold" },
-                    ]}
-                  >
-                    ${cuotaDolares}
-                  </Text>
-                </View>
-              </View>
-            </View>
-          </TouchableOpacity>
         </ScrollView>
       </View>
       <Footer />
@@ -335,6 +280,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    backgroundColor: '#e2e3d9',
+    padding: 30,
   },
   column: {
     flex: 1,
@@ -354,9 +301,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#003366",
   },
-  cardBodyPropiedades: {
-    flexDirection: "column", // Cambiar a "column" para apilar verticalmente
-  },
   iconTextContainer: {
     flexDirection: "row", // Mostrar el icono y el texto en una fila
     alignItems: "center", // Alinear verticalmente al centro
@@ -372,4 +316,42 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#003366",
   },
+  cardPropiedades: {
+    backgroundColor: 'white', // Color de fondo gris casi blanco
+    padding: 0,
+    borderRadius: 5,
+    marginTop : 50,
+    marginBottom: 20,
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3, // Sombra en Android
+  },
+  cardHeaderPropiedades: {
+    backgroundColor: '#6fbf73', // Color verde
+    padding: 10,
+    borderRadius: 5,
+  },
+  cardTitlePropiedades: {
+    color: 'white', // Color de texto blanco
+    fontSize: 20,
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+  cardBodyPropiedades: {
+    padding: 40,
+    backgroundColor: '#e2e3d9',
+  },
+  propertyContainer: {
+    // Estilos para tus elementos de propiedad dentro de la tarjeta
+  },
+  propertyText: {
+    color: 'black', // Color de texto negro
+    fontSize: 16,
+    fontWeight: 'bold', // Texto en negrita
+    marginBottom: 5, // Espacio entre elementos
+    textTransform: 'uppercase', // Convierte el texto en mayúsculas
+  },
+  // Otros estilos según sea necesario
 });

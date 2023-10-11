@@ -29,7 +29,7 @@ const ProjectionReport = ({ route }) => {
   console.log("Este es el userName desde Reporte de cuenta", userName);
 
   useEffect(() => {
-    const url = "http://localhost:3000/api/repEstadoCuenta";
+    const url = "https://api-rest.ecoquintas.net/api/repEstadoCuenta";
     const requestBody = {
       id_cliente: propiedadFiltrada.id_cliente,
       id_propierty: propiedadFiltrada.id_propierty,
