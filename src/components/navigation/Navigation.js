@@ -1,14 +1,16 @@
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { StyleSheet } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Importa tus componentes de pantalla
 import LoginScreen from "../Login/LoginScreen";
 import LoginSuccess from "../Login/LoginSuccess";
 import BalanceReport from "../Balance/BalanceReport";
-import ProjectionReport from '../Projection/ProjectionReport'
+import ProjectionReport from "../Projection/ProjectionReport";
+import Profile from "../Profile/Profile";
 
 // Importa más pantallas si es necesario
 
@@ -32,30 +34,39 @@ const Navigation = () => {
         <Stack.Screen
           name="LoginSuccess"
           component={LoginSuccess}
-          options={{
+          options={({ navigation }) => ({
             headerStyle: {
-              backgroundColor: "#226035",
+              backgroundColor: "#049444",
               height: 150, // Ajusta la altura según tus necesidades
             },
             headerRight: () => (
-              <Ionicons
-                name="leaf"
-                size={24}
-                color="white"
-                style={{ marginRight: 88, transform: [{ rotate: "-90deg" }] }}
-              />
+              <TouchableOpacity
+                style={{ marginRight: 10 }}
+                onPress={async () => {
+                  // Agrega aquí la lógica para cerrar sesión
+                  try {
+                    await AsyncStorage.removeItem("token");
+                    navigation.replace("LoginScreen"); // Redirige al usuario a la pantalla de inicio de sesión
+                  } catch (error) {
+                    console.error("Error al cerrar sesión:", error);
+                  }
+                }}
+              >
+                <Ionicons name="exit" size={24} color="white" />
+              </TouchableOpacity>
             ),
             headerTintColor: "white",
             title: "GrupoEcoquintas",
-            headerTitleAlign: "center", // Centra el título en el encabezado
-          }}
+            headerTitleAlign: "center",
+          })}
         />
+
         <Stack.Screen
           name="BalanceReport"
           component={BalanceReport}
           options={({ route }) => ({
             headerStyle: {
-              backgroundColor: "#226035",
+              backgroundColor: "#049444",
               height: 150, // Ajusta la altura según tus necesidades
             },
             headerTintColor: "white",
@@ -71,7 +82,7 @@ const Navigation = () => {
           component={ProjectionReport}
           options={({ route }) => ({
             headerStyle: {
-              backgroundColor: "#226035",
+              backgroundColor: "#049444",
               height: 150, // Ajusta la altura según tus necesidades
             },
             headerTintColor: "white",
@@ -81,7 +92,19 @@ const Navigation = () => {
             passProps: { dataPropiedades: route.params.dataPropiedades },
           })}
         />
-
+        <Stack.Screen
+          name="Profile"
+          component={Profile}
+          options={({ route }) => ({
+            headerStyle: {
+              backgroundColor: "#049444",
+              height: 150, // Ajusta la altura según tus necesidades
+            },
+            headerTintColor: "white",
+            title: "Perfil",
+            headerTitleAlign: "center", // Centra el título en el encabezado
+          })}
+        />
         {/* Agrega más pantallas y configuraciones de navegación aquí */}
       </Stack.Navigator>
     </NavigationContainer>
