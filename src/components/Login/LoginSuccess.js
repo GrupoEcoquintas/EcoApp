@@ -12,9 +12,11 @@ import Footer from "../Footer/Footer"; // Asegúrate de importar correctamente e
 import { useNavigation } from "@react-navigation/native";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
+import { useUserId } from  "../navigation/Context";
 
 export default function LoginSuccess({ route }) {
-  const { dataPropiedades } = route.params;
+  const { userId, dataPropiedades } = route.params;
+  const { setUserId } = useUserId(); 
   const navigation = useNavigation();
 
   const [saldoColones, setSaldoColones] = useState(1500000);
@@ -24,7 +26,7 @@ export default function LoginSuccess({ route }) {
   const [propiedades, setPropiedades] = useState([]);
 
   const handleCardPressProjection = async (
-    idQuote = 14338,
+    idQuote = 0,
     quoteType = 0,
     proyeccionReal = 1
   ) => {
@@ -93,6 +95,11 @@ export default function LoginSuccess({ route }) {
   const handleCardPressBalance = (nombre, proyecto) => {
     navigation.navigate("BalanceReport", { nombre, proyecto, dataPropiedades });
   };
+  useEffect(() => {
+    // Actualizar el userId en el contexto al cargar el componente
+    setUserId(userId);
+    console.log('Este es mi famoso userId pasado a LoginSuccess', userId)
+  }, [userId, setUserId]);
 
   return (
     <View style={styles.container}>
@@ -134,7 +141,7 @@ export default function LoginSuccess({ route }) {
                   style={styles.propertyContainer}
                   onPress={() =>
                     handleCardPressProjection(
-                      propiedad.id_quote, // Agrega el id_quote aquí
+                      propiedad.id_cotizacion, // Agrega el id_quote aquí
                       propiedad.quote_type, // Agrega el quote_type aquí
                       propiedad.proyeccion_real // Agrega la proyeccion_real aquí
                     )
@@ -227,7 +234,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 12,
     flex: 1,
-    backgroundColor: "#b6dfa0",
+    backgroundColor: "#ececdd",
   },
   card: {
     marginTop: 40,

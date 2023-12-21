@@ -14,6 +14,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CryptoJS from "crypto-js";
 import { useNavigation } from "@react-navigation/native";
+import { useUserId } from  "../navigation/Context";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -25,6 +26,12 @@ export default function LoginScreen() {
     return CryptoJS.MD5(password).toString();
   };
   const navigation = useNavigation();
+  // Función para manejar el reset de contraseña
+  const handleChangePassword = () => {
+    navigation.navigate("ResetPassword"); // Navega a la pantalla de restablecimiento de contraseña
+  };
+  // Desestructura el valor de setUserId desde useUserId
+  const { setUserId } = useUserId();
   const loginPressed = () => {
     // Construir el objeto de datos a enviar
     const data = {
@@ -42,7 +49,7 @@ export default function LoginScreen() {
     })
       .then((response) => response.json())
       .then((data) => {
-        //console.log("Esta es la data recibida del fetch authenticate", data);
+        console.log("Esta es la data recibida del fetch authenticate", data);
         // Manejar la respuesta del backend
         if (data.token) {
           // Autenticación exitosa, guardar el token en el dispositivo o en el estado de la aplicación
@@ -54,16 +61,14 @@ export default function LoginScreen() {
                 "Inicio de sesión exitoso",
                 "¡Has iniciado sesión correctamente!"
               );
-              // Navegar a la siguiente pantalla
-              // Ejemplo: utilizar react-navigation
-              //console.log("Estamo logeados y en home");
               // Navegar a la siguiente pantalla y pasar la variable dataPropiedades como parámetro
               navigation.navigate("LoginSuccess", {
                 dataPropiedades: data.dataPropiedades,
+                userId: data.userId,
               });
             })
             .catch((error) => {
-              //console.log("Error al guardar el token:", error);
+              console.log("Error al guardar el token:", error);
             });
         } else {
           // Autenticación fallida, mostrar mensaje de error
@@ -71,7 +76,7 @@ export default function LoginScreen() {
         }
       })
       .catch((error) => {
-        //console.log("Error en la solicitud:", error);
+        console.log("Error en la solicitud:", error);
       });
   };
 
@@ -108,7 +113,7 @@ export default function LoginScreen() {
         </View>
 
         <View style={styles.forgotContainer}>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={handleChangePassword}>
             <Text style={styles.forgot_button}>Olvidé mi contraseña</Text>
           </TouchableOpacity>
         </View>

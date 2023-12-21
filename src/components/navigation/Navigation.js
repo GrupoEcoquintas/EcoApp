@@ -5,12 +5,15 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+
 // Importa tus componentes de pantalla
 import LoginScreen from "../Login/LoginScreen";
 import LoginSuccess from "../Login/LoginSuccess";
 import BalanceReport from "../Balance/BalanceReport";
 import ProjectionReport from "../Projection/ProjectionReport";
 import Profile from "../Profile/Profile";
+import ResetPassword from "../Login/ResetPassword";
+import ChangePassword from "../Login/ChangePassword";
 
 // Importa más pantallas si es necesario
 
@@ -104,6 +107,24 @@ const Navigation = () => {
             title: "Perfil",
             headerTitleAlign: "center", // Centra el título en el encabezado
           })}
+        />
+        <Stack.Screen
+          name="ResetPassword"
+          component={ResetPassword}
+          options={{
+            title: "",
+            headerTransparent: true,
+            headerTintColor: "white",
+          }}
+        />
+        <Stack.Screen
+          name="ChangePassword"
+          component={ChangePassword}
+          options={{
+            title: "",
+            headerTransparent: true,
+            headerTintColor: "white",
+          }}
         />
         {/* Agrega más pantallas y configuraciones de navegación aquí */}
       </Stack.Navigator>

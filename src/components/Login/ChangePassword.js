@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useUserId } from "../navigation/Context";
 import {
   StyleSheet,
   Text,
@@ -9,38 +10,48 @@ import {
   Alert,
   TextInput,
 } from "react-native";
+import md5 from "crypto-js/md5";
 import { useNavigation } from "@react-navigation/native";
-function ResetPassword() {
-  const navigation = useNavigation();
-  const [email, setEmail] = useState("");
 
-  const handleResetPassword = () => {
-    // Realiza la solicitud de restablecimiento de contraseña aquí
+function ChangePassword({ route }) {
+  const navigation = useNavigation();
+  const { userId } = useUserId();
+  console.log("userId en ChangePassword:", userId);
+
+  const [contrasenaAnterior, setContrasenaAnterior] = useState("");
+  const [nuevaContrasena, setNuevaContrasena] = useState("");
+
+  const convertirMD5 = (texto) => {
+    return md5(texto).toString();
+  };
+  const handleChangePassword = () => {
+    // Realiza la solicitud de cambio de contraseña aquí
+    const data = {
+      contrasenaanterior: convertirMD5(contrasenaAnterior),
+      nuevacontrasena: nuevaContrasena,
+      idUsuario: userId,
+    };
     fetch("https://api-rest.ecoquintas.net/api/cambiarContrasena", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        email: email,
-      }),
+      body: JSON.stringify(data),
     })
       .then((response) => response.json())
       .then((data) => {
-        // Maneja la respuesta del servidor aquí
         console.log(data);
         if (data.message === "Contraseña cambiada exitosamente ✔️") {
-          // La contraseña se restableció correctamente
-          Alert.alert("Contraseña restablecida exitosamente");
+          // La contraseña se cambió correctamente
+          Alert.alert("Contraseña cambiada exitosamente");
           navigation.navigate("LoginScreen");
         } else {
-          // Se produjo un error, muestra el mensaje de error
-          Alert.alert(data.message || "Error al restablecer la contraseña");
+          // Se produjo un error al cambiar la contraseña, muestra el mensaje de error
+          Alert.alert("Error al cambiar la contraseña");
         }
       })
       .catch((error) => {
-        console.error("Error al restablecer la contraseña:", error);
-        Alert.alert("Error al restablecer la contraseña");
+        console.error("Error al cambiar la contraseña:", error);
       });
   };
 
@@ -59,16 +70,22 @@ function ResetPassword() {
         <View style={styles.inputView}>
           <TextInput
             style={styles.TextInput}
-            placeholder="Correo electrónico"
-            onChangeText={(text) => setEmail(text)}
+            placeholder="Contraseña Actual"
+            onChangeText={(text) => setContrasenaAnterior(text)}
+          ></TextInput>
+        </View>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.TextInput}
+            placeholder="Nueva Contraseña"
+            onChangeText={(text) => setNuevaContrasena(text)}
           ></TextInput>
         </View>
         <TouchableOpacity
           style={styles.loginButton}
-          onPress={handleResetPassword}
+          onPress={handleChangePassword}
         >
-          {/* Aquí añadí onPress */}
-          <Text style={styles.loginButtonText}>Restablecer</Text>
+          <Text style={styles.loginButtonText}>Cambiar Contraseña</Text>
         </TouchableOpacity>
       </View>
     </ImageBackground>
@@ -101,7 +118,7 @@ const styles = StyleSheet.create({
     height: 45,
     marginLeft: 60,
     marginBottom: 10,
-    marginTop: 60,
+    marginTop: 10,
   },
   TextInput: {
     flex: 1,
@@ -140,4 +157,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ResetPassword;
+export default ChangePassword;

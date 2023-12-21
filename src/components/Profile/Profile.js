@@ -1,12 +1,7 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import Footer from "../Footer/Footer";
+import { useUserId } from "../navigation/Context";
 
 export default function Profile({ navigation }) {
   const [user, setUser] = useState({
@@ -15,6 +10,8 @@ export default function Profile({ navigation }) {
     phone: "123-456-7890",
     profilePicture: require("../../../assets/user.png"),
   });
+  const { userId } = useUserId();
+  console.log("prueba de id = ", userId);
 
   // Función para manejar el cambio de foto de perfil
   const handleChangeProfilePicture = () => {
@@ -23,7 +20,11 @@ export default function Profile({ navigation }) {
 
   // Función para manejar el cambio de contraseña
   const handleChangePassword = () => {
-    // Implementa la lógica para cambiar la contraseña aquí
+    if (userId) {
+      navigation.navigate("ChangePassword", { userId });
+    } else {
+      console.error("El userId no está definido.");
+    }
   };
 
   return (
@@ -37,7 +38,7 @@ export default function Profile({ navigation }) {
       <TouchableOpacity onPress={handleChangePassword}>
         <Text style={styles.link}>Cambiar Contraseña</Text>
       </TouchableOpacity>
-      <Footer navigation={navigation} />
+      <Footer navigation={navigation} userId={userId} />
     </View>
   );
 }

@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-const Footer = ({ navigation }) => {
+const Footer = ({ navigation, userId }) => {
   return (
     <View style={styles.footerContainer}>
       <View style={styles.footerLine} />
@@ -23,7 +23,7 @@ const Footer = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.footerButton}
-          onPress={() => navigation.navigate("Profile")} // Navegar a la pantalla de perfil
+          onPress={() => navigation.navigate("Profile", { userId: userId })}
         >
           <Ionicons name="ios-person" size={28} color="white" />
           <Text style={styles.footerButtonText}>Perfil</Text>
@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
+    marginTop: 50,
   },
   footer: {
     flexDirection: "row",

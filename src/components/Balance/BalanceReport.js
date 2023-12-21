@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import Footer from "../Footer/Footer";
 import { format } from "date-fns";
+import { useNavigation } from "@react-navigation/native";
 
 const BalanceReport = ({ route }) => {
   const [movimientos, setMovimientos] = useState([]);
@@ -11,6 +12,7 @@ const BalanceReport = ({ route }) => {
   const [monto, setMonto] = useState([]);
   const [saldoActual, setSaldoActual] = useState([]);
   const { nombre, proyecto, dataPropiedades } = route.params;
+  const navigation = useNavigation();
 
   // Filtrar los datos de dataPropiedades
   const propiedadFiltrada = dataPropiedades.find(
@@ -26,6 +28,15 @@ const BalanceReport = ({ route }) => {
   const userName = propiedadFiltrada.userName;
   //console.log("Este es el userName desde Reporte de cuenta", userName);
 
+  function formatCurrency(monto, moneda) {
+    const formatter = new Intl.NumberFormat('es-CR', {
+      style: 'currency',
+      currency: moneda,
+      minimumFractionDigits: 2,
+    });
+
+    return formatter.format(monto);
+  }
   useEffect(() => {
     const url = "https://api-rest.ecoquintas.net/api/repEstadoCuenta";
     const requestBody = {
@@ -51,8 +62,8 @@ const BalanceReport = ({ route }) => {
           return {
             fecha: result.fecha,
             concepto: result.nombre_tipo_pago,
-            monto: result.total_pagado,
-            saldo: result.nuevo_balance,
+            monto: formatCurrency(result.total_pagado, result.moneda),
+            saldo: formatCurrency(result.nuevo_balance, result.moneda),
             moneda: result.moneda,
           };
         });
@@ -112,8 +123,8 @@ const BalanceReport = ({ route }) => {
               <Text style={[styles.titulo, styles.alignLeft]}>
                 Tipo de Pago
               </Text>
-              <Text style={[styles.titulo, styles.alignRight]}>Monto</Text>
-              <Text style={[styles.titulo, styles.alignRight]}>
+              <Text style={[styles.titulo]}>Monto</Text>
+              <Text style={[styles.titulo]}>
                 Saldo Actual
               </Text>
             </View>
@@ -135,8 +146,7 @@ const BalanceReport = ({ route }) => {
                 <Text style={[styles.concepto, styles.alignLeft]}>
                   {movimiento.concepto}
                 </Text>
-                <Text style={[styles.monto, styles.alignRight]}>
-                  {movimiento.simboloMoneda}
+                <Text style={[styles.monto]}>
                   {movimiento.monto}
                 </Text>
                 <Text style={[styles.saldoAcual, styles.alignRight]}>
@@ -147,7 +157,7 @@ const BalanceReport = ({ route }) => {
           </View>
         </ScrollView>
       )}
-      <Footer />
+      <Footer navigation={navigation} />
     </View>
   );
 };
@@ -179,7 +189,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 5,
-    padding: 10,
+    padding: 4,
   },
   titulosContainer: {
     flexDirection: "row",
@@ -203,28 +213,28 @@ const styles = StyleSheet.create({
   movimiento: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 10,
+    marginBottom: 20,
   },
   filaImpar: {
     backgroundColor: "#f9f9f9", // Color gris claro para las filas impares
   },
   fecha: {
-    flex: 2,
-    fontSize: 16,
+    flex: 1.9,
+    fontSize: 13,
   },
   concepto: {
     marginLeft: 5,
-    flex: 2,
-    fontSize: 16,
+    flex: 1.9,
+    fontSize: 15,
   },
   monto: {
-    marginRight: 5,
-    flex: 1,
-    fontSize: 16,
+    marginRight: 1,
+    flex: 2.5,
+    fontSize: 15,
   },
   saldoAcual: {
-    flex: 2,
-    fontSize: 16,
+    flex: 2.7,
+    fontSize: 15,
   },
   scrollContainer: {
     flex: 1,
