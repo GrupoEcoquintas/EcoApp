@@ -14,7 +14,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CryptoJS from "crypto-js";
 import { useNavigation } from "@react-navigation/native";
-import { useUserId } from  "../navigation/Context";
+import { useUserId } from "../navigation/Context";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -31,7 +31,7 @@ export default function LoginScreen() {
     navigation.navigate("ResetPassword"); // Navega a la pantalla de restablecimiento de contraseña
   };
   // Desestructura el valor de setUserId desde useUserId
-  const { setUserId } = useUserId();
+  const { setUserId, setDataPropiedades } = useUserId();
   const loginPressed = () => {
     // Construir el objeto de datos a enviar
     const data = {
@@ -54,6 +54,9 @@ export default function LoginScreen() {
         if (data.token) {
           // Autenticación exitosa, guardar el token en el dispositivo o en el estado de la aplicación
           // Ejemplo: guardar el token en AsyncStorage
+          // Establecer userId y dataPropiedades en el contexto
+          setUserId(data.userId);
+          setDataPropiedades(data.dataPropiedades);
           AsyncStorage.setItem("token", data.token)
             .then(() => {
               //Mostrar alerta de inicio de sesión exitoso

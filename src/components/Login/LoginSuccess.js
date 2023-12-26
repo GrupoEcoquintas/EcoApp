@@ -15,8 +15,7 @@ import * as Sharing from "expo-sharing";
 import { useUserId } from  "../navigation/Context";
 
 export default function LoginSuccess({ route }) {
-  const { userId, dataPropiedades } = route.params;
-  const { setUserId } = useUserId(); 
+  const { userId, dataPropiedades, setUserId } = useUserId();
   const navigation = useNavigation();
 
   const [saldoColones, setSaldoColones] = useState(1500000);

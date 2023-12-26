@@ -4,9 +4,11 @@ const UserIdContext = createContext();
 
 export const UserIdProvider = ({ children }) => {
   const [userId, setUserId] = useState(0);
+  const [dataPropiedades, setDataPropiedades] = useState(null); // Añadir estado para dataPropiedades
+
 
   return (
-    <UserIdContext.Provider value={{ userId, setUserId }}>
+    <UserIdContext.Provider value={{ userId, setUserId, dataPropiedades, setDataPropiedades }}>
       {children}
     </UserIdContext.Provider>
   );

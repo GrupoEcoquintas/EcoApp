@@ -1,5 +1,5 @@
 import * as React from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, CommonActions } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -42,14 +42,20 @@ const Navigation = () => {
               backgroundColor: "#049444",
               height: 150, // Ajusta la altura según tus necesidades
             },
+            headerLeft: () => null, // Esto oculta el botón de retroceso
             headerRight: () => (
               <TouchableOpacity
                 style={{ marginRight: 10 }}
                 onPress={async () => {
-                  // Agrega aquí la lógica para cerrar sesión
                   try {
                     await AsyncStorage.removeItem("token");
-                    navigation.replace("LoginScreen"); // Redirige al usuario a la pantalla de inicio de sesión
+                    // Restablece el estado de navegación para evitar regresar a la pantalla anterior
+                    navigation.dispatch(
+                      CommonActions.reset({
+                        index: 0,
+                        routes: [{ name: "LoginScreen" }],
+                      })
+                    );
                   } catch (error) {
                     console.error("Error al cerrar sesión:", error);
                   }
@@ -61,6 +67,7 @@ const Navigation = () => {
             headerTintColor: "white",
             title: "GrupoEcoquintas",
             headerTitleAlign: "center",
+            gestureEnabled: false,
           })}
         />
 
