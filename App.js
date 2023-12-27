@@ -1,6 +1,11 @@
-import React from 'react';
-import Navigation from './src/components/navigation/Navigation';
+import React from "react";
+import Navigation from "./src/components/navigation/Navigation";
+import { UserIdProvider } from './src/components/navigation/Context'; // Ajusta la ruta según sea necesario
 
 export default function App() {
-  return <Navigation />;
+  return (
+  <UserIdProvider>
+    <Navigation />
+  </UserIdProvider>
+  );
 }

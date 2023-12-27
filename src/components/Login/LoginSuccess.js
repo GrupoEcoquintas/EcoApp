@@ -11,13 +11,11 @@ import {
 import Footer from "../Footer/Footer"; // Asegúrate de importar correctamente el componente Footer
 import { useNavigation } from "@react-navigation/native";
 import * as FileSystem from "expo-file-system";
-import * as MediaLibrary from "expo-media-library";
 import * as Sharing from "expo-sharing";
-import LinearGradient from 'react-native-linear-gradient';
-
+import { useUserId } from  "../navigation/Context";
 
 export default function LoginSuccess({ route }) {
-  const { dataPropiedades } = route.params;
+  const { userId, dataPropiedades, setUserId } = useUserId();
   const navigation = useNavigation();
 
   const [saldoColones, setSaldoColones] = useState(1500000);
@@ -27,7 +25,7 @@ export default function LoginSuccess({ route }) {
   const [propiedades, setPropiedades] = useState([]);
 
   const handleCardPressProjection = async (
-    idQuote = 14338,
+    idQuote = 0,
     quoteType = 0,
     proyeccionReal = 1
   ) => {
@@ -84,7 +82,6 @@ export default function LoginSuccess({ route }) {
           dialogTitle: "Abrir PDF",
         });
       } else {
-        //console.error('Error al descargar el archivo.');
         //console.error('Error al descargar el archivo. Estado:', downloadResult.status);
         Alert.alert("Error", "No se pudo descargar el archivo.");
       }
@@ -97,12 +94,14 @@ export default function LoginSuccess({ route }) {
   const handleCardPressBalance = (nombre, proyecto) => {
     navigation.navigate("BalanceReport", { nombre, proyecto, dataPropiedades });
   };
+  useEffect(() => {
+    // Actualizar el userId en el contexto al cargar el componente
+    setUserId(userId);
+    console.log('Este es mi famoso userId pasado a LoginSuccess', userId)
+  }, [userId, setUserId]);
 
   return (
-    <LinearGradient
-      colors={["#4CAF50", "#2196F3"]} // Cambia estos colores según tus preferencias
-      style={styles.container}
-    >
+    <View style={styles.container}>
       <View>
         <ScrollView style={styles.scrollView}>
           <View style={styles.cardPropiedades}>
@@ -141,7 +140,7 @@ export default function LoginSuccess({ route }) {
                   style={styles.propertyContainer}
                   onPress={() =>
                     handleCardPressProjection(
-                      propiedad.id_quote, // Agrega el id_quote aquí
+                      propiedad.id_cotizacion, // Agrega el id_quote aquí
                       propiedad.quote_type, // Agrega el quote_type aquí
                       propiedad.proyeccion_real // Agrega la proyeccion_real aquí
                     )
@@ -155,6 +154,7 @@ export default function LoginSuccess({ route }) {
                       source={require("../../../assets/pdf.png")}
                       style={styles.icono}
                     />
+                      <Text style={styles.downloadLink}>Descargar</Text>
                   </View>
                 </TouchableOpacity>
               ))}
@@ -224,8 +224,8 @@ export default function LoginSuccess({ route }) {
           </View>
         </ScrollView>
       </View>
-      <Footer />
-      </LinearGradient>
+      <Footer navigation={navigation} />
+    </View>
   );
 }
 
@@ -233,10 +233,12 @@ const styles = StyleSheet.create({
   container: {
     padding: 12,
     flex: 1,
+    backgroundColor: "#ececdd",
+    paddingBottom: 80,
   },
   card: {
     marginTop: 40,
-    backgroundColor: "#eaeaec",
+    backgroundColor: "#f4df84",
     borderRadius: 10,
     shadowColor: "#000",
     shadowOffset: {
@@ -248,26 +250,6 @@ const styles = StyleSheet.create({
     elevation: 5,
     padding: 20,
     margin: 10,
-  },
-  cardPropiedades: {
-    marginTop: 40,
-    backgroundColor: "#eaeaec",
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    padding: 20,
-    margin: 10,
-  },
-  cardTitlePropiedades: {
-    fontSize: 30,
-    marginBottom: 10,
-    color: "green",
   },
   cardHeader: {
     borderBottomColor: "#ccc",
@@ -275,7 +257,6 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     marginBottom: 10,
     alignItems: "center",
-    backgroundColor: "orange",
   },
   cardTitle: {
     fontSize: 18,
@@ -285,7 +266,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: '#e2e3d9',
+    backgroundColor: "#e2e3d9",
     padding: 30,
   },
   column: {
@@ -322,41 +303,54 @@ const styles = StyleSheet.create({
     color: "#003366",
   },
   cardPropiedades: {
-    backgroundColor: 'white', // Color de fondo gris casi blanco
+    backgroundColor: "white", // Color de fondo gris casi blanco
     padding: 0,
     borderRadius: 5,
-    marginTop : 50,
+    marginTop: 50,
     marginBottom: 20,
-    shadowColor: 'black',
+    shadowColor: "black",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 3, // Sombra en Android
   },
   cardHeaderPropiedades: {
-    backgroundColor: '#6fbf73', // Color verde
+    backgroundColor: "#049444", // Color verde
     padding: 10,
     borderRadius: 5,
   },
   cardTitlePropiedades: {
-    color: 'white', // Color de texto blanco
+    color: "white", // Color de texto blanco
     fontSize: 20,
-    textAlign: 'center',
-    fontWeight: 'bold',
+    textAlign: "center",
+    fontWeight: "bold",
   },
   cardBodyPropiedades: {
-    padding: 40,
-    backgroundColor: '#e2e3d9',
+    padding: 16,
+    backgroundColor: "#e2e3d9",
   },
   propertyContainer: {
     // Estilos para tus elementos de propiedad dentro de la tarjeta
   },
   propertyText: {
-    color: 'black', // Color de texto negro
-    fontSize: 16,
-    fontWeight: 'bold', // Texto en negrita
+    color: "black", // Color de texto negro
+    fontSize: 15,
+    fontWeight: "bold", // Texto en negrita
     marginBottom: 5, // Espacio entre elementos
-    textTransform: 'uppercase', // Convierte el texto en mayúsculas
+    textTransform: "uppercase", // Convierte el texto en mayúsculas
+  },
+  downloadLink: {
+    // Estilos para el enlace de descarga
+    color: "blue", // Color del enlace
+    textDecorationLine: "underline",
+    fontSize: 12, // Subrayado para que parezca un enlace
+    marginBottom: 5,
+  },
+  icono: {
+    // Estilos para el icono
+    marginLeft: 15,
+    width: 24,
+    height: 24,
   },
   // Otros estilos según sea necesario
 });

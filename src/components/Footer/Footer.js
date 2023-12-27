@@ -1,15 +1,17 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useUserId } from  "../navigation/Context";
 
-const Footer = () => {
+const Footer = ({ navigation }) => {
+  const { userId } = useUserId(); // Obtiene userId del contexto
   return (
     <View style={styles.footerContainer}>
       <View style={styles.footerLine} />
       <View style={styles.footer}>
         <TouchableOpacity
           style={styles.footerButton}
-          onPress={() => console.log("Button 1 pressed")}
+          onPress={() => navigation.navigate("LoginSuccess")}
         >
           <Ionicons name="ios-home" size={28} color="white" />
           <Text style={styles.footerButtonText}>Inicio</Text>
@@ -23,7 +25,7 @@ const Footer = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.footerButton}
-          onPress={() => console.log("Button 3 pressed")}
+          onPress={() => navigation.navigate("Profile", { userId: userId })}
         >
           <Ionicons name="ios-person" size={28} color="white" />
           <Text style={styles.footerButtonText}>Perfil</Text>
@@ -45,7 +47,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingVertical: 15,
-    backgroundColor: "#226035",
+    backgroundColor: "#008C45", // Verde principal de Ecoquintas
   },
   footerButton: {
     marginHorizontal: 20,
@@ -59,8 +61,9 @@ const styles = StyleSheet.create({
   },
   footerLine: {
     height: 4,
-    backgroundColor: "#E2C80B",
+    backgroundColor: "#FFD100", // Amarillo secundario de Ecoquintas
   },
 });
+
 
 export default Footer;

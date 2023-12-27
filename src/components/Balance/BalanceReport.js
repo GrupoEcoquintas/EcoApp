@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import Footer from "../Footer/Footer";
 import { format } from "date-fns";
+import { useNavigation } from "@react-navigation/native";
 
 const BalanceReport = ({ route }) => {
   const [movimientos, setMovimientos] = useState([]);
@@ -11,6 +12,7 @@ const BalanceReport = ({ route }) => {
   const [monto, setMonto] = useState([]);
   const [saldoActual, setSaldoActual] = useState([]);
   const { nombre, proyecto, dataPropiedades } = route.params;
+  const navigation = useNavigation();
 
   // Filtrar los datos de dataPropiedades
   const propiedadFiltrada = dataPropiedades.find(
@@ -26,6 +28,15 @@ const BalanceReport = ({ route }) => {
   const userName = propiedadFiltrada.userName;
   //console.log("Este es el userName desde Reporte de cuenta", userName);
 
+  function formatCurrency(monto, moneda) {
+    const formatter = new Intl.NumberFormat('es-CR', {
+      style: 'currency',
+      currency: moneda,
+      minimumFractionDigits: 2,
+    });
+
+    return formatter.format(monto);
+  }
   useEffect(() => {
     const url = "https://api-rest.ecoquintas.net/api/repEstadoCuenta";
     const requestBody = {
@@ -51,8 +62,8 @@ const BalanceReport = ({ route }) => {
           return {
             fecha: result.fecha,
             concepto: result.nombre_tipo_pago,
-            monto: result.total_pagado,
-            saldo: result.nuevo_balance,
+            monto: formatCurrency(result.total_pagado, result.moneda),
+            saldo: formatCurrency(result.nuevo_balance, result.moneda),
             moneda: result.moneda,
           };
         });
@@ -96,67 +107,56 @@ const BalanceReport = ({ route }) => {
     <View style={styles.container}>
       <Text style={styles.heading}>Estado de Cuenta</Text>
       <Text style={styles.subHeading}>Cliente: {cliente.userName}</Text>
-      <Text style={styles.subHeading}>
-        Nombre del proyecto: {cliente.nombreProyecto}
-      </Text>
-      <Text style={styles.subHeading}>
-        Número de Lote: {cliente.numeroLote}
-      </Text>
+      <Text style={styles.subHeading}>Nombre del proyecto: {cliente.nombreProyecto}</Text>
+      <Text style={styles.subHeading}>Número de Lote: {cliente.numeroLote}</Text>
       <Text style={styles.subHeading}>Saldo Actual: {saldoActual}</Text>
-
-      {dataLoaded && (
-        <ScrollView style={styles.scrollContainer}>
-          <View style={styles.movimientosContainer}>
-            <View style={styles.titulosContainer}>
-              <Text style={[styles.titulo, styles.alignLeft]}>Fecha</Text>
-              <Text style={[styles.titulo, styles.alignLeft]}>
-                Tipo de Pago
+  
+      <View style={styles.titulosContainer}>
+        <Text style={[styles.titulo, styles.alignLeft]}>Fecha</Text>
+        <Text style={[styles.titulo, styles.alignLeft]}>Tipo de Pago</Text>
+        <Text style={[styles.titulo]}>Monto</Text>
+        <Text style={[styles.titulo]}>Saldo Actual</Text>
+      </View>
+  
+      <ScrollView style={styles.scrollContainer}>
+        <View style={styles.movimientosContainer}>
+          {cliente.movimientos.map((movimiento, index) => (
+            <View
+              style={[
+                styles.movimiento,
+                index % 2 === 0 ? null : styles.filaImpar,
+              ]}
+              key={index}
+            >
+              <Text style={[styles.fecha, styles.alignLeft]}>
+                {format(new Date(movimiento.fecha), "dd/MM/yyyy")}
               </Text>
-              <Text style={[styles.titulo, styles.alignRight]}>Monto</Text>
-              <Text style={[styles.titulo, styles.alignRight]}>
-                Saldo Actual
+              <Text style={[styles.concepto, styles.alignLeft]}>
+                {movimiento.concepto}
+              </Text>
+              <Text style={[styles.monto]}>
+                {movimiento.monto}
+              </Text>
+              <Text style={[styles.saldoAcual]}>
+                {movimiento.saldo}
               </Text>
             </View>
-
-            {cliente.movimientos.map((movimiento, index) => (
-              <View
-                style={[
-                  styles.movimiento,
-                  index % 2 === 0 ? null : styles.filaImpar,
-                ]}
-                key={index}
-              >
-                {/* Solo muestra la fecha si es válida */}
-                {movimiento.fecha !== "Fecha Inválida" && (
-                  <Text style={[styles.fecha, styles.alignLeft]}>
-                    {format(new Date(movimiento.fecha), "dd/MM/yyyy")}
-                  </Text>
-                )}
-                <Text style={[styles.concepto, styles.alignLeft]}>
-                  {movimiento.concepto}
-                </Text>
-                <Text style={[styles.monto, styles.alignRight]}>
-                  {movimiento.simboloMoneda}
-                  {movimiento.monto}
-                </Text>
-                <Text style={[styles.saldoAcual, styles.alignRight]}>
-                  {movimiento.saldo}
-                </Text>
-              </View>
-            ))}
-          </View>
-        </ScrollView>
-      )}
-      <Footer />
+          ))}
+        </View>
+      </ScrollView>
+  
+      <Footer navigation={navigation} />
     </View>
   );
+  
 };
 
 const styles = StyleSheet.create({
   container: {
+    paddingBottom: 80,
     flex: 1,
-    backgroundColor: "#f5f5f5",
-    padding: 20,
+    backgroundColor: "#ececdd",
+    padding: 15,
   },
   heading: {
     fontSize: 24,
@@ -176,18 +176,21 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   movimientosContainer: {
+    marginTop: 2,
+    backgroundColor: "white",
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 5,
-    padding: 10,
+    padding: 3,
   },
   titulosContainer: {
+    marginTop: 15,
+    backgroundColor: "white",
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 10,
-    borderBottomWidth: 1,
+    borderBottomWidth: 2,
     borderColor: "#ccc",
-    paddingBottom: 5,
+    padding: 5,
   },
   titulo: {
     flex: 1,
@@ -203,28 +206,28 @@ const styles = StyleSheet.create({
   movimiento: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 10,
+    marginBottom: 20,
   },
   filaImpar: {
     backgroundColor: "#f9f9f9", // Color gris claro para las filas impares
   },
   fecha: {
-    flex: 2,
-    fontSize: 16,
+    flex: 1.9,
+    fontSize: 13,
   },
   concepto: {
     marginLeft: 5,
-    flex: 2,
-    fontSize: 16,
+    flex: 1.9,
+    fontSize: 15,
   },
   monto: {
-    marginRight: 5,
-    flex: 1,
-    fontSize: 16,
+    marginRight: 1,
+    flex: 2.5,
+    fontSize: 15,
   },
   saldoAcual: {
-    flex: 2,
-    fontSize: 16,
+    flex: 2.7,
+    fontSize: 15,
   },
   scrollContainer: {
     flex: 1,
