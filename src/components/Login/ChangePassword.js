@@ -84,7 +84,7 @@ function ChangePassword() {
           style={styles.loginButton}
           onPress={handleChangePassword}
         >
-          <Text style={styles.loginButtonText}>Cambiar Contraseña</Text>
+          <Text style={styles.loginButtonText}>Cambiar</Text>
         </TouchableOpacity>
       </View>
     </ImageBackground>
