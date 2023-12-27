@@ -234,6 +234,7 @@ const styles = StyleSheet.create({
     padding: 12,
     flex: 1,
     backgroundColor: "#ececdd",
+    paddingBottom: 80,
   },
   card: {
     marginTop: 40,

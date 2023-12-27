@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import Footer from "../Footer/Footer";
 import { useUserId } from "../navigation/Context";
@@ -10,8 +10,14 @@ export default function Profile({ navigation }) {
     phone: "123-456-7890",
     profilePicture: require("../../../assets/user.png"),
   });
-  const { userId } = useUserId();
-  console.log("prueba de id = ", userId);
+  const { userId, dataPropiedades, email } = useUserId();
+
+  useEffect(() => {
+    if (dataPropiedades && dataPropiedades.length > 0) {
+      const userName = dataPropiedades[0].userName;
+      setUser(prevState => ({ ...prevState, name: userName, email: email }));
+    }
+  }, [dataPropiedades, email]);
 
   // Función para manejar el cambio de foto de perfil
   const handleChangeProfilePicture = () => {
@@ -48,9 +54,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     //justifyContent: "center",
-    marginTop: 60,
+    backgroundColor: "#ececdd", // Cambiar el color de fondo aquí
   },
   profilePicture: {
+    marginTop: 60,
     width: 150,
     height: 150,
     borderRadius: 75, // Para hacerlo circular, la mitad del tamaño

@@ -41,14 +41,13 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    marginTop: 50,
   },
   footer: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     paddingVertical: 15,
-    backgroundColor: "#049444",
+    backgroundColor: "#008C45", // Verde principal de Ecoquintas
   },
   footerButton: {
     marginHorizontal: 20,
@@ -62,8 +61,9 @@ const styles = StyleSheet.create({
   },
   footerLine: {
     height: 4,
-    backgroundColor: "#E2C80B",
+    backgroundColor: "#FFD100", // Amarillo secundario de Ecoquintas
   },
 });
+
 
 export default Footer;

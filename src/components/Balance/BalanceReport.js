@@ -107,65 +107,55 @@ const BalanceReport = ({ route }) => {
     <View style={styles.container}>
       <Text style={styles.heading}>Estado de Cuenta</Text>
       <Text style={styles.subHeading}>Cliente: {cliente.userName}</Text>
-      <Text style={styles.subHeading}>
-        Nombre del proyecto: {cliente.nombreProyecto}
-      </Text>
-      <Text style={styles.subHeading}>
-        Número de Lote: {cliente.numeroLote}
-      </Text>
+      <Text style={styles.subHeading}>Nombre del proyecto: {cliente.nombreProyecto}</Text>
+      <Text style={styles.subHeading}>Número de Lote: {cliente.numeroLote}</Text>
       <Text style={styles.subHeading}>Saldo Actual: {saldoActual}</Text>
-
-      {dataLoaded && (
-        <ScrollView style={styles.scrollContainer}>
-          <View style={styles.movimientosContainer}>
-            <View style={styles.titulosContainer}>
-              <Text style={[styles.titulo, styles.alignLeft]}>Fecha</Text>
-              <Text style={[styles.titulo, styles.alignLeft]}>
-                Tipo de Pago
+  
+      <View style={styles.titulosContainer}>
+        <Text style={[styles.titulo, styles.alignLeft]}>Fecha</Text>
+        <Text style={[styles.titulo, styles.alignLeft]}>Tipo de Pago</Text>
+        <Text style={[styles.titulo]}>Monto</Text>
+        <Text style={[styles.titulo]}>Saldo Actual</Text>
+      </View>
+  
+      <ScrollView style={styles.scrollContainer}>
+        <View style={styles.movimientosContainer}>
+          {cliente.movimientos.map((movimiento, index) => (
+            <View
+              style={[
+                styles.movimiento,
+                index % 2 === 0 ? null : styles.filaImpar,
+              ]}
+              key={index}
+            >
+              <Text style={[styles.fecha, styles.alignLeft]}>
+                {format(new Date(movimiento.fecha), "dd/MM/yyyy")}
               </Text>
-              <Text style={[styles.titulo]}>Monto</Text>
-              <Text style={[styles.titulo]}>
-                Saldo Actual
+              <Text style={[styles.concepto, styles.alignLeft]}>
+                {movimiento.concepto}
+              </Text>
+              <Text style={[styles.monto]}>
+                {movimiento.monto}
+              </Text>
+              <Text style={[styles.saldoAcual]}>
+                {movimiento.saldo}
               </Text>
             </View>
-
-            {cliente.movimientos.map((movimiento, index) => (
-              <View
-                style={[
-                  styles.movimiento,
-                  index % 2 === 0 ? null : styles.filaImpar,
-                ]}
-                key={index}
-              >
-                {/* Solo muestra la fecha si es válida */}
-                {movimiento.fecha !== "Fecha Inválida" && (
-                  <Text style={[styles.fecha, styles.alignLeft]}>
-                    {format(new Date(movimiento.fecha), "dd/MM/yyyy")}
-                  </Text>
-                )}
-                <Text style={[styles.concepto, styles.alignLeft]}>
-                  {movimiento.concepto}
-                </Text>
-                <Text style={[styles.monto]}>
-                  {movimiento.monto}
-                </Text>
-                <Text style={[styles.saldoAcual, styles.alignRight]}>
-                  {movimiento.saldo}
-                </Text>
-              </View>
-            ))}
-          </View>
-        </ScrollView>
-      )}
+          ))}
+        </View>
+      </ScrollView>
+  
       <Footer navigation={navigation} />
     </View>
   );
+  
 };
 
 const styles = StyleSheet.create({
   container: {
+    paddingBottom: 80,
     flex: 1,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#ececdd",
     padding: 15,
   },
   heading: {
@@ -186,18 +176,21 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   movimientosContainer: {
+    marginTop: 2,
+    backgroundColor: "white",
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 5,
-    padding: 4,
+    padding: 3,
   },
   titulosContainer: {
+    marginTop: 15,
+    backgroundColor: "white",
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 10,
-    borderBottomWidth: 1,
+    borderBottomWidth: 2,
     borderColor: "#ccc",
-    paddingBottom: 5,
+    padding: 5,
   },
   titulo: {
     flex: 1,

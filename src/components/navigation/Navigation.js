@@ -80,8 +80,9 @@ const Navigation = () => {
               height: 150, // Ajusta la altura según tus necesidades
             },
             headerTintColor: "white",
-            title: "Reporte de Estado de Cuenta",
+            title: "Estado de Cuenta",
             headerTitleAlign: "center", // Centra el título en el encabezado
+            headerBackTitle: "Atrás",
             // Pasa dataPropiedades como parámetro al componente BalanceReport
             passProps: { dataPropiedades: route.params.dataPropiedades },
           })}
@@ -113,6 +114,7 @@ const Navigation = () => {
             headerTintColor: "white",
             title: "Perfil",
             headerTitleAlign: "center", // Centra el título en el encabezado
+            headerBackTitle: "Atrás",
           })}
         />
         <Stack.Screen

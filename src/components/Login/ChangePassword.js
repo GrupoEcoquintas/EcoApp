@@ -13,10 +13,9 @@ import {
 import md5 from "crypto-js/md5";
 import { useNavigation } from "@react-navigation/native";
 
-function ChangePassword({ route }) {
+function ChangePassword() {
   const navigation = useNavigation();
   const { userId } = useUserId();
-  console.log("userId en ChangePassword:", userId);
 
   const [contrasenaAnterior, setContrasenaAnterior] = useState("");
   const [nuevaContrasena, setNuevaContrasena] = useState("");
