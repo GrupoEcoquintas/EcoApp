@@ -65,7 +65,7 @@ export default function LoginScreen() {
                 "¡Has iniciado sesión correctamente!"
               );
               // Navegar a la siguiente pantalla y pasar la variable dataPropiedades como parámetro
-              navigation.navigate("LoginSuccess", {
+              navigation.navigate("Menu", {
                 dataPropiedades: data.dataPropiedades,
                 userId: data.userId,
               });

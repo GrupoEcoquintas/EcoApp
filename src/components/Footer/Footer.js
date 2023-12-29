@@ -11,7 +11,7 @@ const Footer = ({ navigation }) => {
       <View style={styles.footer}>
         <TouchableOpacity
           style={styles.footerButton}
-          onPress={() => navigation.navigate("LoginSuccess")}
+          onPress={() => navigation.navigate("Menu")}
         >
           <Ionicons name="ios-home" size={28} color="white" />
           <Text style={styles.footerButtonText}>Inicio</Text>
