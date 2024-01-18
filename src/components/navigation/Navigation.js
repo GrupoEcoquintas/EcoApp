@@ -1,18 +1,17 @@
 import * as React from "react";
 import { NavigationContainer, CommonActions } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { StyleSheet, TouchableOpacity, Image } from "react-native";
+import { StyleSheet, TouchableOpacity, Image, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import LinearGradient from "react-native-linear-gradient";
-import Logo from "../../../assets/logo.png"; // Asegúrate de que la ruta sea correcta
 
 // Importa tus componentes de pantalla
 import Menu from "../Main/Menu";
 import LoginScreen from "../Login/LoginScreen";
 import LoginSuccess from "../Login/LoginSuccess";
+import BalanceScreen from "../Balance/BalanceScreen";
 import BalanceReport from "../Balance/BalanceReport";
-import ProjectionReport from "../Projection/ProjectionReport";
+import ProjectionScreen from "../Projection/ProjectionScreen";
 import Profile from "../Profile/Profile";
 import ResetPassword from "../Login/ResetPassword";
 import ChangePassword from "../Login/ChangePassword";
@@ -80,7 +79,6 @@ const Navigation = () => {
             ),
           })}
         />
-
         <Stack.Screen
           name="LoginSuccess"
           component={LoginSuccess}
@@ -117,6 +115,73 @@ const Navigation = () => {
             gestureEnabled: false,
           })}
         />
+        <Stack.Screen
+          name="BalanceScreen"
+          component={BalanceScreen}
+          options={({ navigation }) => ({
+            headerStyle: {
+              backgroundColor: "#049444",
+              height: 200,
+            },
+            headerLeft: () => (
+              <TouchableOpacity
+                style={{ marginLeft: 10, marginBottom: 90 }}
+                onPress={() => navigation.goBack()}
+              >
+                <Ionicons name="arrow-back" size={30} color="white" />
+              </TouchableOpacity>
+            ),
+            headerTintColor: "white",
+            headerTitle: () => (
+              <Text
+                style={{
+                  fontSize: 32,
+                  fontWeight: "bold",
+                  color: "white",
+                  textAlign: "center",
+                  marginLeft: 20,
+                }}
+              >
+                Mis Movimientos
+              </Text>
+            ),
+            headerTitleAlign: "left",
+          })}
+        />
+        <Stack.Screen
+          name="ProjectionScreen"
+          component={ProjectionScreen}
+          options={({ navigation }) => ({
+            headerStyle: {
+              backgroundColor: "#049444",
+              height: 200,
+            },
+            headerLeft: () => (
+              <TouchableOpacity
+                style={{ marginLeft: 10, marginBottom: 90 }}
+                onPress={() => navigation.goBack()}
+              >
+                <Ionicons name="arrow-back" size={30} color="white" />
+              </TouchableOpacity>
+            ),
+            headerTintColor: "white",
+            headerTitle: () => (
+              <Text
+                style={{
+                  fontSize: 32,
+                  fontWeight: "bold",
+                  color: "white",
+                  textAlign: "left",
+                  marginLeft: 20,
+                }}
+              >
+                Mis Proyecciones
+              </Text>
+            ),
+            headerTitleAlign: "left",
+            //gestureEnabled: false,
+          })}
+        />
 
         <Stack.Screen
           name="BalanceReport"
@@ -124,28 +189,24 @@ const Navigation = () => {
           options={({ route }) => ({
             headerStyle: {
               backgroundColor: "#049444",
-              height: 150, // Ajusta la altura según tus necesidades
+              height: 200, // Ajusta la altura según tus necesidades
             },
             headerTintColor: "white",
-            title: "Estado de Cuenta",
+            headerTitle: () => (
+              <Text
+                style={{
+                  fontSize: 30,
+                  fontWeight: "bold",
+                  color: "white",
+                  textAlign: "left",
+                  marginLeft: 20,
+                }}
+              >
+                Estado de Cuenta
+              </Text>
+            ),
             headerTitleAlign: "center", // Centra el título en el encabezado
             headerBackTitle: "Atrás",
-            // Pasa dataPropiedades como parámetro al componente BalanceReport
-            passProps: { dataPropiedades: route.params.dataPropiedades },
-          })}
-        />
-
-        <Stack.Screen
-          name="ProjectionReport"
-          component={ProjectionReport}
-          options={({ route }) => ({
-            headerStyle: {
-              backgroundColor: "#049444",
-              height: 150, // Ajusta la altura según tus necesidades
-            },
-            headerTintColor: "white",
-            title: "Reporte de Proyecciones",
-            headerTitleAlign: "center", // Centra el título en el encabezado
             // Pasa dataPropiedades como parámetro al componente BalanceReport
             passProps: { dataPropiedades: route.params.dataPropiedades },
           })}
@@ -153,17 +214,35 @@ const Navigation = () => {
         <Stack.Screen
           name="Profile"
           component={Profile}
-          options={({ route }) => ({
+          options={{
             headerStyle: {
               backgroundColor: "#049444",
-              height: 150, // Ajusta la altura según tus necesidades
+              height: 140,
+              shadowOpacity: 0, // Elimina sombra
+              shadowRadius: 0,
+              shadowOffset: { width: 0, height: 0 },
+              borderBottomWidth: 0, // Elimina el borde inferior
+              borderBottomColor: "transparent", // O hazlo transparente
             },
             headerTintColor: "white",
-            title: "Perfil",
-            headerTitleAlign: "center", // Centra el título en el encabezado
+            headerTitle: () => (
+              <Text
+                style={{
+                  fontSize: 30,
+                  fontWeight: "bold",
+                  color: "white",
+                  textAlign: "left",
+                  marginLeft: 20,
+                }}
+              >
+                Perfil
+              </Text>
+            ),
+            headerTitleAlign: "center",
             headerBackTitle: "Atrás",
-          })}
+          }}
         />
+
         <Stack.Screen
           name="ResetPassword"
           component={ResetPassword}
@@ -191,7 +270,7 @@ const Navigation = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#049444",
   },
   headerStyle: {
     backgroundColor: "#168039",

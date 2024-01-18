@@ -32,10 +32,10 @@ const MainMenu = ({ navigation }) => {
 };
 
 const menuItems = [
-    { title: "Movimientos", screen: "LoginSuccess" },
-    { title: "Proyecciones", screen: "LoginSuccess" },
-    { title: "Tarjeta EQ", screen: "LoginSuccess" },
-    { title: "Pago Electrónico (Proximamente)", screen: "LoginSuccess" },
+    { title: "Movimientos", screen: "BalanceScreen" },
+    { title: "Proyecciones", screen: "ProjectionScreen" },
+    { title: "Tarjeta EQ", screen: "Menu" },
+    { title: "Pago Electrónico (Proximamente)", screen: "Menu" },
   ];
   
 const styles = StyleSheet.create({

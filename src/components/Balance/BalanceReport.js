@@ -87,25 +87,14 @@ const BalanceReport = ({ route }) => {
         concepto: movimiento.concepto,
         monto: movimiento.monto,
         saldo: movimiento.saldo,
-        moneda: movimiento.moneda,
-        simboloMoneda: getMonedaSymbol(movimiento.moneda),
+        //moneda: movimiento.moneda,
+        //simboloMoneda: getMonedaSymbol(movimiento.moneda),
       }))
       .filter((movimiento) => movimiento.fecha !== "Fecha Inválida"),
   };
 
-  function getMonedaSymbol(moneda) {
-    switch (moneda) {
-      case "CRC":
-        return "₡";
-      case "USD":
-        return "$";
-      default:
-        return ""; // Si la moneda no es "CRC" ni "USD", devuelve una cadena vacía
-    }
-  }
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Estado de Cuenta</Text>
       <Text style={styles.subHeading}>Cliente: {cliente.userName}</Text>
       <Text style={styles.subHeading}>Nombre del proyecto: {cliente.nombreProyecto}</Text>
       <Text style={styles.subHeading}>Número de Lote: {cliente.numeroLote}</Text>
@@ -157,13 +146,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#ececdd",
     padding: 15,
-  },
-  heading: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 10,
-    textAlign: "center",
-    color: "#6fbf73", // Color verde claro
   },
   subHeading: {
     fontSize: 18,

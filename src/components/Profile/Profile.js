@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView} from "react-native";
 import Footer from "../Footer/Footer";
 import { useUserId } from "../navigation/Context";
 
@@ -15,7 +15,7 @@ export default function Profile({ navigation }) {
   useEffect(() => {
     if (dataPropiedades && dataPropiedades.length > 0) {
       const userName = dataPropiedades[0].userName;
-      setUser(prevState => ({ ...prevState, name: userName, email: email }));
+      setUser((prevState) => ({ ...prevState, name: userName, email: email }));
     }
   }, [dataPropiedades, email]);
 
@@ -35,15 +35,17 @@ export default function Profile({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={handleChangeProfilePicture}>
-        <Image source={user.profilePicture} style={styles.profilePicture} />
-      </TouchableOpacity>
-      <Text style={styles.name}>{user.name}</Text>
-      <Text style={styles.info}>{user.email}</Text>
-      <Text style={styles.info}>{user.phone}</Text>
-      <TouchableOpacity onPress={handleChangePassword}>
-        <Text style={styles.link}>Cambiar Contraseña</Text>
-      </TouchableOpacity>
+      <ScrollView style={styles.scrollView}>
+        <TouchableOpacity onPress={handleChangeProfilePicture}>
+          <Image source={user.profilePicture} style={styles.profilePicture} />
+        </TouchableOpacity>
+        <Text style={styles.name}>{user.name}</Text>
+        <Text style={styles.info}>{user.email}</Text>
+        <Text style={styles.info}>{user.phone}</Text>
+        <TouchableOpacity onPress={handleChangePassword}>
+          <Text style={styles.link}>Cambiar Contraseña</Text>
+        </TouchableOpacity>
+      </ScrollView>
       <Footer navigation={navigation} userId={userId} />
     </View>
   );
@@ -52,11 +54,28 @@ export default function Profile({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    //justifyContent: "center",
-    backgroundColor: "#ececdd", // Cambiar el color de fondo aquí
+    backgroundColor: "#049444",
+  },
+  scrollView: {
+    borderTopLeftRadius: 50,
+    borderTopRightRadius: 50,
+    backgroundColor: 'white',
+    marginTop: -4,
+    overflow: 'hidden',
+    borderTopWidth: 5,
+    borderTopColor: '#049444',
+    // Añade sombras para crear el efecto de elevación
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: -2, // Ajusta la dirección de la sombra
+    },
+    shadowOpacity: 0.3, // Ajusta la opacidad de la sombra
+    shadowRadius: 5,
+    elevation: 5, // Elevación en Android
   },
   profilePicture: {
+    alignSelf: "center",
     marginTop: 60,
     width: 150,
     height: 150,
@@ -64,15 +83,18 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   name: {
+    alignSelf: "center",
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 10,
   },
   info: {
+    alignSelf: "center",
     fontSize: 16,
     marginBottom: 10,
   },
   link: {
+    alignSelf: "center",
     color: "blue",
     textDecorationLine: "underline",
   },
