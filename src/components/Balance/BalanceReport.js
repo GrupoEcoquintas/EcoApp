@@ -7,10 +7,8 @@ import { useNavigation } from "@react-navigation/native";
 const BalanceReport = ({ route }) => {
   const [movimientos, setMovimientos] = useState([]);
   const [dataLoaded, setDataLoaded] = useState(false);
-  const [fecha, setFecha] = useState([]);
-  const [concepto, setConcepto] = useState([]);
-  const [monto, setMonto] = useState([]);
-  const [saldoActual, setSaldoActual] = useState([]);
+  const [saldoActual, setSaldoActual] = useState("...cargando");
+  const [saldoCliente, setSaldoCliente] = useState(null);
   const { nombre, proyecto, dataPropiedades } = route.params;
   const navigation = useNavigation();
 
@@ -57,7 +55,9 @@ const BalanceReport = ({ route }) => {
       .then((response) => response.json())
       .then((data) => {
         const { results } = data;
-        //console.log("Estos son los resultados del fetch", results);
+        const saldo = data.results[0].saldo;
+        setSaldoActual(saldo)
+        console.log("Este es el slado", saldo);
         const movimientosActualizados = results.map((result) => {
           return {
             fecha: result.fecha,

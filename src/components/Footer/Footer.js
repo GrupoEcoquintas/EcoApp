@@ -18,13 +18,6 @@ const Footer = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.footerButton}
-          onPress={() => console.log("Button 2 pressed")}
-        >
-          <Ionicons name="ios-search" size={28} color="white" />
-          <Text style={styles.footerButtonText}>Buscar</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.footerButton}
           onPress={() => navigation.navigate("Profile", { userId: userId })}
         >
           <Ionicons name="ios-person" size={28} color="white" />

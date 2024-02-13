@@ -17,10 +17,8 @@ import { useNavigation } from "@react-navigation/native";
 import { useUserId } from "../navigation/Context";
 
 export default function LoginScreen() {
-
   const [password, setPassword] = useState("");
   const [hashedPassword, setHashedPassword] = useState("");
-  const [propiedades, setPropiedades] = useState([]);
 
   const hashPassword = (password) => {
     return CryptoJS.MD5(password).toString();
@@ -56,7 +54,10 @@ export default function LoginScreen() {
           // Establecer userId y dataPropiedades en el contexto
           setUserId(data.userId);
           setDataPropiedades(data.dataPropiedades);
-          console.log('Esta es la info seteada en DataPropiedades', data.dataPropiedades)
+          console.log(
+            "Esta es la info seteada en DataPropiedades",
+            data.dataPropiedades
+          );
           AsyncStorage.setItem("token", data.token)
             .then(() => {
               //Mostrar alerta de inicio de sesión exitoso
@@ -65,9 +66,11 @@ export default function LoginScreen() {
                 "¡Has iniciado sesión correctamente!"
               );
               // Navegar a la siguiente pantalla y pasar la variable dataPropiedades como parámetro
+              console.log(data.dataPropiedades[0].userName);
               navigation.navigate("Menu", {
                 dataPropiedades: data.dataPropiedades,
                 userId: data.userId,
+                userName: data.dataPropiedades[0].userName,
               });
             })
             .catch((error) => {
@@ -141,11 +144,11 @@ const styles = StyleSheet.create({
     marginTop: "15%",
   },
   text: {
-    color: "white",
+    color: "#049444",
     marginTop: "-3%",
     marginLeft: "28%",
     marginBottom: 50,
-    fontSize: 17,
+    fontSize: 19,
     fontWeight: "bold",
   },
   inputView: {
@@ -172,7 +175,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginBottom: 30,
     fontWeight: "bold",
-    fontSize: 18
+    fontSize: 18,
   },
   loginButton: {
     width: "50%",

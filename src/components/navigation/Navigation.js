@@ -1,7 +1,7 @@
 import * as React from "react";
 import { NavigationContainer, CommonActions } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { StyleSheet, TouchableOpacity, Image, Text } from "react-native";
+import { StyleSheet, TouchableOpacity, Image, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -38,18 +38,54 @@ const Navigation = () => {
         <Stack.Screen
           name="Menu"
           component={Menu}
-          options={({ navigation }) => ({
-            // Añade la función aquí para obtener 'navigation'
+          options={({ navigation, route }) => ({
             headerStyle: {
-              backgroundColor: "#049444AA",
+              backgroundColor: "#049444",
               height: 200,
               borderBottomWidth: 2,
               borderBottomColor: "#ffffff",
             },
+            headerTitle: () => null,
             headerTintColor: "white",
-            headerTitleAlign: "center",
-            headerTransparent: true,
-            headerLeft: () => null,
+            headerLeft: () => {
+              // Obtener userName de los parámetros de la ruta
+              const userName = route.params?.userName ?? "Usuario Anónimo";
+              return (
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    marginLeft: 20,
+                  }}
+                >
+                  <Image
+                    source={{
+                      uri: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                    }}
+                    style={{
+                      width: 55,
+                      height: 55,
+                      borderRadius: 27.5,
+                      marginRight: 10,
+                    }}
+                  />
+                  <View>
+                    <Text style={{ color: "white", fontSize: 16 }}>
+                      Bienvenido
+                    </Text>
+                    <Text
+                      style={{
+                        color: "white",
+                        fontWeight: "bold",
+                        fontSize: 20,
+                      }}
+                    >
+                      {userName}
+                    </Text>
+                  </View>
+                </View>
+              );
+            },
             headerRight: () => (
               <TouchableOpacity
                 style={{ marginRight: 10 }}
@@ -69,13 +105,6 @@ const Navigation = () => {
               >
                 <Ionicons name="exit" size={24} color="white" />
               </TouchableOpacity>
-            ),
-            headerTitle: () => (
-              <Image
-                source={require("../../../assets/logo.png")}
-                resizeMode="contain"
-                style={{ width: 150, height: "100%" }}
-              />
             ),
           })}
         />
@@ -182,7 +211,6 @@ const Navigation = () => {
             //gestureEnabled: false,
           })}
         />
-
         <Stack.Screen
           name="BalanceReport"
           component={BalanceReport}
@@ -217,12 +245,12 @@ const Navigation = () => {
           options={{
             headerStyle: {
               backgroundColor: "#049444",
-              height: 140,
-              shadowOpacity: 0, // Elimina sombra
-              shadowRadius: 0,
+              height: 200,
+              //shadowOpacity: 0, // Elimina sombra
+              //shadowRadius: 0,
               shadowOffset: { width: 0, height: 0 },
-              borderBottomWidth: 0, // Elimina el borde inferior
-              borderBottomColor: "transparent", // O hazlo transparente
+              //borderBottomWidth: 0, // Elimina el borde inferior
+              //borderBottomColor: "transparent", // O hazlo transparente
             },
             headerTintColor: "white",
             headerTitle: () => (
@@ -242,7 +270,6 @@ const Navigation = () => {
             headerBackTitle: "Atrás",
           }}
         />
-
         <Stack.Screen
           name="ResetPassword"
           component={ResetPassword}
