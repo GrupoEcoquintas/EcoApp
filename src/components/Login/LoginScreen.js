@@ -29,7 +29,7 @@ export default function LoginScreen() {
     navigation.navigate("ResetPassword"); // Navega a la pantalla de restablecimiento de contraseña
   };
   // Desestructura el valor de setUserId desde useUserId
-  const { setUserId, setDataPropiedades, email, setEmail } = useUserId();
+  const { setUserId, setDataPropiedades, email, setEmail, setUserName } = useUserId();
   const loginPressed = () => {
     // Construir el objeto de datos a enviar
     const data = {
@@ -54,6 +54,9 @@ export default function LoginScreen() {
           // Establecer userId y dataPropiedades en el contexto
           setUserId(data.userId);
           setDataPropiedades(data.dataPropiedades);
+          const userName = data.dataPropiedades[0].userName;
+          setUserName(userName);
+          console.log('Este es el userName', userName)
           console.log(
             "Esta es la info seteada en DataPropiedades",
             data.dataPropiedades
@@ -66,11 +69,10 @@ export default function LoginScreen() {
                 "¡Has iniciado sesión correctamente!"
               );
               // Navegar a la siguiente pantalla y pasar la variable dataPropiedades como parámetro
-              console.log(data.dataPropiedades[0].userName);
               navigation.navigate("Menu", {
                 dataPropiedades: data.dataPropiedades,
                 userId: data.userId,
-                userName: data.dataPropiedades[0].userName,
+                //userName: data.dataPropiedades[0].userName,
               });
             })
             .catch((error) => {

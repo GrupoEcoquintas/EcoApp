@@ -5,8 +5,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Image,
-  Alert,
+  ImageBackground,
 } from "react-native";
 import Footer from "../Footer/Footer"; // Asegúrate de importar correctamente el componente Footer
 import { useNavigation } from "@react-navigation/native";
@@ -17,12 +16,6 @@ import { useUserId } from "../navigation/Context";
 export default function BalanceScreen({ route }) {
   const { userId, dataPropiedades, setUserId } = useUserId();
   const navigation = useNavigation();
-
-  const [saldoColones, setSaldoColones] = useState(1500000);
-  const [saldoDolares, setSaldoDolares] = useState(2000);
-  const [cuotaColones, setCuotaColones] = useState(50000);
-  const [cuotaDolares, setCuotaDolares] = useState(100);
-  const [propiedades, setPropiedades] = useState([]);
 
   const handleCardPressBalance = (nombre, proyecto) => {
     navigation.navigate("BalanceReport", { nombre, proyecto, dataPropiedades });
@@ -37,20 +30,28 @@ export default function BalanceScreen({ route }) {
     <View style={styles.container}>
       <Text style={styles.headerTitle}>Mis Propiedades</Text>
       <ScrollView>
-        {dataPropiedades.map((propiedad) => (
-          <TouchableOpacity
+        {dataPropiedades.map((propiedad, i) => (
+          <ImageBackground
             key={propiedad.id_propierty}
+            source={require("../../../assets/cardBG.jpg")} // Asegúrate de cambiar la ruta si es necesario
             style={styles.cardPropiedad}
-            onPress={() =>
-              handleCardPressBalance(
-                propiedad.nombre_propiedad,
-                propiedad.nombre_proyecto
-              )
-            }
+            imageStyle={{ borderRadius: 10 }} // Para redondear las esquinas de la imagen de fondo
           >
-            <Text style={styles.cardTitle}>{propiedad.nombre_propiedad}</Text>
-            <Text style={styles.propertyText}>{propiedad.nombre_proyecto}</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              key={propiedad.id_propierty}
+              onPress={() =>
+                handleCardPressBalance(
+                  propiedad.nombre_propiedad,
+                  propiedad.nombre_proyecto
+                )
+              }
+            >
+              <Text style={styles.cardTitle}>{propiedad.nombre_propiedad}</Text>
+              <Text style={styles.propertyText}>
+                {propiedad.nombre_proyecto}
+              </Text>
+            </TouchableOpacity>
+          </ImageBackground>
         ))}
       </ScrollView>
     </View>

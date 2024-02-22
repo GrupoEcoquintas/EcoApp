@@ -15,6 +15,7 @@ import ProjectionScreen from "../Projection/ProjectionScreen";
 import Profile from "../Profile/Profile";
 import ResetPassword from "../Login/ResetPassword";
 import ChangePassword from "../Login/ChangePassword";
+import HeaderTitleComponent from '../navigation/HeaderTitle';
 
 // Importa más pantallas si es necesario
 
@@ -47,45 +48,7 @@ const Navigation = () => {
             },
             headerTitle: () => null,
             headerTintColor: "white",
-            headerLeft: () => {
-              // Obtener userName de los parámetros de la ruta
-              const userName = route.params?.userName ?? "Usuario Anónimo";
-              return (
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    marginLeft: 20,
-                  }}
-                >
-                  <Image
-                    source={{
-                      uri: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
-                    }}
-                    style={{
-                      width: 55,
-                      height: 55,
-                      borderRadius: 27.5,
-                      marginRight: 10,
-                    }}
-                  />
-                  <View>
-                    <Text style={{ color: "white", fontSize: 16 }}>
-                      Bienvenido
-                    </Text>
-                    <Text
-                      style={{
-                        color: "white",
-                        fontWeight: "bold",
-                        fontSize: 20,
-                      }}
-                    >
-                      {userName}
-                    </Text>
-                  </View>
-                </View>
-              );
-            },
+            headerLeft: () => <HeaderTitleComponent />,
             headerRight: () => (
               <TouchableOpacity
                 style={{ marginRight: 10 }}

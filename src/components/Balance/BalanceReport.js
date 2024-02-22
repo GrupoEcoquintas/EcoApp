@@ -27,14 +27,23 @@ const BalanceReport = ({ route }) => {
   //console.log("Este es el userName desde Reporte de cuenta", userName);
 
   function formatCurrency(monto, moneda) {
-    const formatter = new Intl.NumberFormat('es-CR', {
-      style: 'currency',
+    // Formatear el monto usando Intl.NumberFormat
+    const formattedAmount = new Intl.NumberFormat("es-CR", {
+      style: "currency",
       currency: moneda,
       minimumFractionDigits: 2,
-    });
+    }).format(monto);
 
-    return formatter.format(monto);
+    // Para USD, extraer solo la parte numérica y concatenar con el símbolo de dólar sin espacio
+    if (moneda === "USD") {
+      const numericPart = formattedAmount.replace(/[^\d.,]/g, "");
+      return "$" + numericPart;
+    } else {
+      // Para otras monedas, usar el resultado formateado directamente
+      return formattedAmount;
+    }
   }
+
   useEffect(() => {
     const url = "https://api-rest.ecoquintas.net/api/repEstadoCuenta";
     const requestBody = {
@@ -56,7 +65,9 @@ const BalanceReport = ({ route }) => {
       .then((data) => {
         const { results } = data;
         const saldo = data.results[0].saldo;
-        setSaldoActual(saldo)
+        const moneda = data.results[0].moneda;
+        setSaldoActual(formatCurrency(saldo, moneda)); // Formatea y establece el saldo actual
+        console.log("Este es el saldo", saldoActual);
         console.log("Este es el slado", saldo);
         const movimientosActualizados = results.map((result) => {
           return {
@@ -96,17 +107,21 @@ const BalanceReport = ({ route }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.subHeading}>Cliente: {cliente.userName}</Text>
-      <Text style={styles.subHeading}>Nombre del proyecto: {cliente.nombreProyecto}</Text>
-      <Text style={styles.subHeading}>Número de Lote: {cliente.numeroLote}</Text>
+      <Text style={styles.subHeading}>
+        Nombre del proyecto: {cliente.nombreProyecto}
+      </Text>
+      <Text style={styles.subHeading}>
+        Número de Lote: {cliente.numeroLote}
+      </Text>
       <Text style={styles.subHeading}>Saldo Actual: {saldoActual}</Text>
-  
+
       <View style={styles.titulosContainer}>
         <Text style={[styles.titulo, styles.alignLeft]}>Fecha</Text>
         <Text style={[styles.titulo, styles.alignLeft]}>Tipo de Pago</Text>
         <Text style={[styles.titulo]}>Monto</Text>
         <Text style={[styles.titulo]}>Saldo Actual</Text>
       </View>
-  
+
       <ScrollView style={styles.scrollContainer}>
         <View style={styles.movimientosContainer}>
           {cliente.movimientos.map((movimiento, index) => (
@@ -115,7 +130,7 @@ const BalanceReport = ({ route }) => {
                 styles.movimiento,
                 index % 2 === 0 ? null : styles.filaImpar,
               ]}
-              key={index}
+              key={index} // Usar el índice como key, solo si no tienes un identificador único
             >
               <Text style={[styles.fecha, styles.alignLeft]}>
                 {format(new Date(movimiento.fecha), "dd/MM/yyyy")}
@@ -123,21 +138,15 @@ const BalanceReport = ({ route }) => {
               <Text style={[styles.concepto, styles.alignLeft]}>
                 {movimiento.concepto}
               </Text>
-              <Text style={[styles.monto]}>
-                {movimiento.monto}
-              </Text>
-              <Text style={[styles.saldoAcual]}>
-                {movimiento.saldo}
-              </Text>
+              <Text style={[styles.monto]}>{movimiento.monto}</Text>
+              <Text style={[styles.saldoAcual]}>{movimiento.saldo}</Text>
             </View>
           ))}
         </View>
       </ScrollView>
-  
       <Footer navigation={navigation} />
     </View>
   );
-  
 };
 
 const styles = StyleSheet.create({

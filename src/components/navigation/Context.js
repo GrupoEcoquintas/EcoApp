@@ -7,46 +7,54 @@ export const UserIdProvider = ({ children }) => {
   const [userId, setUserId] = useState(0);
   const [dataPropiedades, setDataPropiedades] = useState(null);
   const [email, setEmail] = useState("");
-  const [userName, setUserName] = useState(""); // Nuevo estado para el nombre de usuario
+  const [userName, setUserName] = useState("");
 
   useEffect(() => {
-    // Carga el nombre de usuario almacenado al iniciar la aplicación
-    const loadStoredUserName = async () => {
+    // Carga inicial de datos almacenados
+    const loadData = async () => {
       try {
+        // Intenta cargar el userName almacenado
         const storedUserName = await AsyncStorage.getItem("userName");
         if (storedUserName) {
           setUserName(storedUserName);
         }
+        // Aquí puedes agregar la carga de más datos si es necesario
       } catch (error) {
-        console.error("Error al cargar el nombre de usuario almacenado", error);
+        console.error("Error al cargar datos almacenados", error);
       }
     };
 
-    loadStoredUserName();
+    loadData();
   }, []);
 
-  return (
-    <UserIdContext.Provider
-      value={{
-        userId,
-        setUserId,
-        dataPropiedades,
-        setDataPropiedades,
-        email,
-        setEmail,
-        userName, // Hazlo disponible en el contexto
-        setUserName, // Permite actualizar el nombre de usuario en el contexto
-      }}
-    >
-      {children}
-    </UserIdContext.Provider>
-  );
+  // Observa el cambio en userName y lo almacena localmente
+  useEffect(() => {
+    const storeData = async () => {
+      try {
+        await AsyncStorage.setItem("userName", userName);
+      } catch (error) {
+        console.error("Error al almacenar el userName", error);
+      }
+    };
+
+    if (userName) {
+      storeData();
+    }
+  }, [userName]);
+
+  const contextValue = {
+    userId,
+    setUserId,
+    dataPropiedades,
+    setDataPropiedades,
+    email,
+    setEmail,
+    userName,
+    setUserName,
+  };
+
+  return <UserIdContext.Provider value={contextValue}>{children}</UserIdContext.Provider>;
 };
 
-export const useUserId = () => {
-  const context = useContext(UserIdContext);
-  if (!context) {
-    throw new Error("useUserId debe ser usado dentro de un UserIdProvider");
-  }
-  return context;
-};
+export const useUserId = () => useContext(UserIdContext);
+
