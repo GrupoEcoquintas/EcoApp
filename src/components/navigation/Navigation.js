@@ -43,8 +43,6 @@ const Navigation = () => {
             headerStyle: {
               backgroundColor: "#049444",
               height: 200,
-              borderBottomWidth: 2,
-              borderBottomColor: "#ffffff",
             },
             headerTitle: () => null,
             headerTintColor: "white",

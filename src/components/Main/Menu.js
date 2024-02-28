@@ -4,7 +4,6 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  ImageBackground,
   Image
 } from "react-native";
 import Footer from "../Footer/Footer";
@@ -22,7 +21,6 @@ const MainMenu = ({ navigation }) => {
       source={require("../../../assets/background.png")}
       style={styles.background}
     >
-      <Text style={styles.title}>Bienvenido!</Text>
       <View style={styles.container}>
         {menuItems.map((item, index) => (
           <TouchableOpacity
@@ -63,7 +61,7 @@ const styles = StyleSheet.create({
   menuItem: {
     width: '40%', // Ancho de cada cuadrado
     height: '30%', // Altura de cada cuadrado
-    margin: '5%',
+    margin: '4%',
     backgroundColor: "#049444",
     borderRadius: 16,
     justifyContent: "center",
@@ -73,11 +71,13 @@ const styles = StyleSheet.create({
   menuItemText: {
     fontWeight: "bold",
     color: "white",
-    fontSize: 18,
-    textAlign: 'left', // Alinea el texto a la izquierda
+    fontSize: 16, // Reducir el tamaño de la fuente si es necesario
+    textAlign: 'center',
+    margin: 5, // Agregar margen para asegurar que el texto no toque los bordes
   },
+  
   icon: {
-    width: 70,
+    width: 65,
     height: 70,
   },
   title: {

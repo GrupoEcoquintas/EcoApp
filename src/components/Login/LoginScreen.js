@@ -47,7 +47,6 @@ export default function LoginScreen() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("Esta es la data recibida del fetch authenticate", data);
         // Manejar la respuesta del backend
         if (data.token) {
           // Autenticación exitosa, guardar el token en el dispositivo o en el estado de la aplicación
@@ -56,11 +55,6 @@ export default function LoginScreen() {
           setDataPropiedades(data.dataPropiedades);
           const userName = data.dataPropiedades[0].userName;
           setUserName(userName);
-          console.log('Este es el userName', userName)
-          console.log(
-            "Esta es la info seteada en DataPropiedades",
-            data.dataPropiedades
-          );
           AsyncStorage.setItem("token", data.token)
             .then(() => {
               //Mostrar alerta de inicio de sesión exitoso

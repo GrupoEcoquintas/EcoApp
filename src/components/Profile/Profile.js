@@ -41,7 +41,7 @@ export default function Profile({ navigation }) {
         </TouchableOpacity>
         <Text style={styles.name}>{user.name}</Text>
         <Text style={styles.info}>{user.email}</Text>
-        <Text style={styles.info}>{user.phone}</Text>
+        
         <TouchableOpacity onPress={handleChangePassword}>
           <Text style={styles.link}>Cambiar Contraseña</Text>
         </TouchableOpacity>

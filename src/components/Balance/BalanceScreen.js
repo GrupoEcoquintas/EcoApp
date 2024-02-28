@@ -23,7 +23,6 @@ export default function BalanceScreen({ route }) {
   useEffect(() => {
     // Actualizar el userId en el contexto al cargar el componente
     setUserId(userId);
-    console.log("Este es mi famoso userId pasado a BalanceScreen", userId);
   }, [userId, setUserId]);
 
   return (

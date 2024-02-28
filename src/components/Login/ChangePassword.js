@@ -39,7 +39,6 @@ function ChangePassword() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         if (data.message === "Contraseña cambiada exitosamente ✔️") {
           // La contraseña se cambió correctamente
           Alert.alert("Contraseña cambiada exitosamente");

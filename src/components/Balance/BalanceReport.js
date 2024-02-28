@@ -67,8 +67,6 @@ const BalanceReport = ({ route }) => {
         const saldo = data.results[0].saldo;
         const moneda = data.results[0].moneda;
         setSaldoActual(formatCurrency(saldo, moneda)); // Formatea y establece el saldo actual
-        console.log("Este es el saldo", saldoActual);
-        console.log("Este es el slado", saldo);
         const movimientosActualizados = results.map((result) => {
           return {
             fecha: result.fecha,

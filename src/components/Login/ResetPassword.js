@@ -28,7 +28,6 @@ function ResetPassword() {
       .then((response) => response.json())
       .then((data) => {
         // Maneja la respuesta del servidor aquí
-        console.log(data);
         if (data.message === "Contraseña cambiada exitosamente ✔️") {
           // La contraseña se restableció correctamente
           Alert.alert("Contraseña restablecida exitosamente");
